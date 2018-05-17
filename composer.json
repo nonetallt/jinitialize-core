@@ -1,0 +1,40 @@
+{
+    "name": "nonetallt/install-site",
+    "description": "Install a new local apache2 site configured for laravel",
+    "type": "project",
+    "require": {
+        "php": ">=7.0.0",
+        "vlucas/phpdotenv": "^2.4",
+        "sebastiaanluca/php-stub-generator": "^0.1.1",
+        "symfony/console": "^3.4",
+        "nonetallt/jinitialize-plugin": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6",
+        "consolidation/robo": "~1",
+        "henrikbjorn/lurker": "^1.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jyri Mikkola",
+            "email": "jyri.mikkola@pp.inet.fi"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": { 
+            "Nonetallt\\Jinitialize\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Nonetallt\\Jinitialize\\ComposerScripts::postAutoloadDump"
+        ]
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "name": "[PLUGIN_NAME]",
+    "description": "[PLUGIN_DESCRIPTION]",
+    "type": "library",
+    "require": {
+        "php": ">=7.0.0",
+        "nonetallt/jinitialize-plugin": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6",
+        "consolidation/robo": "~1",
+        "henrikbjorn/lurker": "^1.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "[AUTHOR_NAME]",
+            "email": "[AUTHOR_EMAIL]"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": { 
+            "[PLUGIN_NAMESPACE]": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}

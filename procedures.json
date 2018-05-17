@@ -1,0 +1,41 @@
+{
+    "plugin": {
+        "description": "Initializes a new jinitializer plugin project.",
+        "commands": {
+            "plugins": [ 
+                "create-plugin"
+            ]
+        }
+    },
+    "laravel-local": { 
+        "description": "Initializes a new local laravel project.",
+        "commands": {
+            "mysql": [
+                "create-database",
+                "create-user"
+            ],
+            "laravel": [
+                "create-project",
+                "mysql-database"
+            ],
+            "shell": [
+                "tags"
+            ],
+            "git": [
+                "init",
+                "create-upstream-bitbucket",
+                "ignore --tags"
+            ],
+            "apache2": [
+                "create-site-local",
+                "reload",
+                "setup host"
+            ],
+            "shell": [
+                "composer install",
+                "npm install",
+                "chgrp -R www-data {APP_PATH}/{APP_NAME}"
+            ]
+        }
+    }
+}

@@ -1,0 +1,4 @@
+.env
+vendor/
+test/output/
+boostrap/cache/

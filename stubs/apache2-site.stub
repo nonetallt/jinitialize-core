@@ -1,0 +1,14 @@
+<VirtualHost *:80>
+    ServerName [SITE_NAME]
+        DocumentRoot [APP_PATH]/[APP_NAME]/public
+
+        <Directory [APP_PATH]/[APP_NAME]/public>
+            AllowOverride All
+            allow from all
+            Options +Indexes
+        </Directory>
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        LogLevel warn
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
