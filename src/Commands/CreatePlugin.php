@@ -26,27 +26,30 @@ class CreatePlugin extends Command
         $stubDir = "$projectDir/stubs/plugin";
 
 
-
-
-        /* Create dest folder */
-        $dest = "$baseDir/$pluginName";
-        if(file_exists($dest)) {
+        $project = new Project("$baseDir/$pluginName");
+        
+        if(! $project->isPathValid()) {
             $this->abort("Project directory already exists: $dest");
         }
-        if(! mkdir($dest, 0755)) {
+        if(! $project->createFolder()) {
             $this->abort("Could not create project folder at: $dest");
         }
+        $project->createStructure([
+            'src' => [],
+            'tests' => [
+                'Unit', 
+                'Feature', 
+                'output', 
+                'Traits'
+            ]
+        ]);
 
+        $project->copyFilesFrom($stubDir);
 
-
-
-        /* Copy files */
-        $files = array_diff(scandir($stubDir), ['.', '..']);
 
         $authorNick = 'nonetallt';
         $author = 'Jyri Mikkola';
         $email = 'jyri.mikkola@pp.inet.fi';
-
         $composerName = "$authorNick/$pluginName";
 
         $pluginParts = explode('-', $pluginName);
@@ -59,43 +62,39 @@ class CreatePlugin extends Command
 
         $description = $io->ask('Give a package description');
 
-        foreach($files as $file) {
-            $stub = new StubGenerator("$stubDir/$file", "$dest/$file");
-            $test = $stub->render([
-                '[PLUGIN_NAME]'        => $composerName,
-                '[PLUGIN_DESCRIPTION]' => $description,
-                '[AUTHOR_NAME]'        => $author,
-                '[AUTHOR_EMAIL]'       => $email,
-                '[PLUGIN_NAMESPACE]'   => $namespace,
-            ]);
-        }
+        /* foreach($files as $file) { */
+        /*     $stub = new StubGenerator("$stubDir/$file", "$dest/$file"); */
+        /*     $test = $stub->render([ */
+        /*         '[PLUGIN_NAME]'        => $composerName, */
+        /*         '[PLUGIN_DESCRIPTION]' => $description, */
+        /*         '[AUTHOR_NAME]'        => $author, */
+        /*         '[AUTHOR_EMAIL]'       => $email, */
+        /*         '[PLUGIN_NAMESPACE]'   => $namespace, */
+        /*     ]); */
+        /* } */
 
-        /* Create folders */
-        $structure = [
-            'src' => [],
-            'tests' => ['Unit', 'Feature', 'output', 'Traits'],
-        ];
-        $this->createStructureIn($structure, $dest);
+        
     }
 
-    public function createComposerFile()
+    /* TODO placegolder */
+    public function __set($key, $value)
     {
-
+        $this->attributes[$key] = $value;
     }
 
-    private function createStructureIn(array $structure, string $to)
+    public function createComposerFile(string $name, string $description, string $author, string $email, string $namespace)
     {
-        foreach($structure as $folder => $subfolders) {
-
-            if(empty($subfolders)) {
-                mkdir("$to/$folder");
-            }
-            foreach($subfolders as $subfolder) {
-                mkdir("$to/$folder/$subfolder", 0755, true);
-            }
-        }
+        $stub = new StubGenerator("$stubDir/$file", "$dest/$file");
+        $test = $stub->render([
+            '[PLUGIN_NAME]'        => $name,
+            '[PLUGIN_DESCRIPTION]' => $description,
+            '[AUTHOR_NAME]'        => $author,
+            '[AUTHOR_EMAIL]'       => $email,
+            '[PLUGIN_NAMESPACE]'   => $namespace,
+        ]);
     }
 
+    
     public function revert()
     {
 

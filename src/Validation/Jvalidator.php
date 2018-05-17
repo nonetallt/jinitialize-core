@@ -1,6 +1,6 @@
 <?php
 
-namespace Nonetallt\Validation;
+namespace Nonetallt\Jinitialize\Validation;
 
 class Jvalidator
 {

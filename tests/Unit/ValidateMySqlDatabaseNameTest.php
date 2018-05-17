@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use PHPunit\Framework\TestCase;
-use Nonetallt\Validation\Jvalidator;
+use Nonetallt\Jinitialize\Validation\Jvalidator;
 
 class ValidateMySqlDatabaseNameTest extends TestCase
 {
