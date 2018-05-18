@@ -7,10 +7,18 @@ use SebastiaanLuca\StubGenerator\StubGenerator;
 class Project
 {
     private $basePath;
+    private $folders;
 
     public function __construct(string $basePath)
     {
         $this->basePath = $basePath;
+        $this->folders = null;
+    }
+
+    /* TODO factory */
+    public static function createFromExisting()
+    {
+
     }
 
     public static function isPathValid(string $path = null)
@@ -30,6 +38,12 @@ class Project
     {
         $folder = new Folder($this->getFolderName(), $structure);
         $folder->create($this->getParentFolderPath(), 0755, true);
+        $this->folders = $folder;
+    }
+
+    public function getFolders()
+    {
+        return $this->folders;
     }
 
     public function getParentFolderPath()
@@ -39,14 +53,14 @@ class Project
 
     public function getFolderName()
     {
-        return Strings::lastAfter($this->basePath, '/');
+        return Strings::afterLast($this->basePath, '/');
     }
 
     public function copyStubsFrom(string $path, array $replacements)
     {
-        if(! $this->isPathValid($path)) {
-            return false;
-        }
+        /* Abort if path is not a folder */
+        if(! is_dir($path)) return false;
+
         $files = array_diff(scandir($path), ['.', '..']);
 
         foreach($files as $file) {

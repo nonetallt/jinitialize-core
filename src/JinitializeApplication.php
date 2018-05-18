@@ -5,7 +5,7 @@ namespace Nonetallt\Jinitialize;
 use Symfony\Component\Console\Application;
 use Dotenv\Dotenv;
 use Nonetallt\Jinitialize\Commands\CreatePlugin;
-use Nonetallt\Jinitialize\Plugin\Procedure;
+use Nonetallt\Jinitialize\Procedure;
 
 class JinitializeApplication extends Application
 {
@@ -44,6 +44,11 @@ class JinitializeApplication extends Application
         $this->registerCommands();
     }
 
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
     public function getPlugins()
     {
         return $this->plugins;
@@ -63,8 +68,8 @@ class JinitializeApplication extends Application
 
         /* TODO Create procedure out of every single command */ 
         $command = new CreatePlugin();
-        $procedure = new Procedure([$command->getName(), $command->getDescription(), [$command]]);
-        $procedure->setContainer($this->container->getPlugin());
+        $procedure = new Procedure($command->getName(), $command->getDescription(), [$command]);
+        $procedure->setContainer($this->container);
         $this->add($procedure);
     }
 }

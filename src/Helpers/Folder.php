@@ -72,7 +72,7 @@ class Folder
     {
         $mainFolder = "$path/$this->name";
 
-        if(! Project::isPathValid($path)) {
+        if(! Project::isPathValid($mainFolder)) {
             throw new \Exception("Cannot create folder structure at $path, path does not exist or is not writable.");
         }
 

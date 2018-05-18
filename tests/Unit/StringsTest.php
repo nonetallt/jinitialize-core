@@ -63,5 +63,17 @@ class StringsTest extends TestCase
         $result = Strings::packageNamespace('nonetallt', 'jinitialize-plugin-composer');
         $this->assertEquals('Nonetallt\\\\Jinitialize\\\\Plugin\\\\Composer\\\\', $result);
     }
+
+    public function testCamelbackCase()
+    {
+        $result = Strings::toSnakeCase('testVariable');
+        $this->assertEquals('test_variable', $result);
+    }
+
+    public function testConvertToStubCase()
+    {
+        $result = \Nonetallt\Jinitialize\JinitializePluginContainer::transformForStub('testVariable');
+        $this->assertEquals('[TEST_VARIABLE]', $result);
+    }
         
 }

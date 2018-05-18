@@ -103,7 +103,7 @@ class Procedure extends Command
             }
             $variables[$key] = $attribute;
         }
-        $this->container->exportVariables($variables);
+        $this->container->getPlugin($command->getPlugin()->getName())->exportVariables($variables);
     }
 
     /**

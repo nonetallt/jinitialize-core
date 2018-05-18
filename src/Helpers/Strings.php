@@ -85,4 +85,21 @@ class Strings
 
         return $str;
     }
+
+    public static function toSnakeCase(string $string)
+    {
+        /* lowercase first */
+        $string = lcfirst($string);
+
+        $output = '';
+
+        for($n = 0; $n < strlen($string); $n++) {
+            $char = substr($string, $n, 1);
+            if(ctype_upper($char)) {
+                $output .= '_';
+            }
+            $output .= $char;
+        }
+        return strtolower($output);
+    }
 }
