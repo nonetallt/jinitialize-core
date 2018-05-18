@@ -30,23 +30,6 @@ class GenerateStubTest extends TestCase
         $this->assertEquals(file_get_contents($output), file_get_contents($expected));
     }
 
-    public function testCreatePluginComposerStub()
-    {
-        /* $input = __DIR__ . '/../../stubs/plugin/composer.json'; */
-        /* $output = __DIR__ . "/../output/composer.out"; */
-        /* $expected = __DIR__ . '/../expected/plugin/composer.json'; */
-
-        /* $command = new \Nonetallt\Jinitialize\Commands\CreatePlugin(); */
-        /* $command->author = 'Jyri Mikkola'; */
-        /* $command->email = 'jyri.mikkola@pp.inet.fi'; */
-        /* $command->nickname = 'nonetallt'; */
-        /* $command->packageName = 'nonetallt/jinitialize-plugin-test'; */
-        /* /1* $command->namespace *1/ */ 
-
-        /* $command->createComposerFile($input, $output); */
-        /* $this->assertEquals(file_get_contents($output), file_get_contents($expected)); */
-    }
-
     /**
      * Remove files generated from stubs from the output folder
      */

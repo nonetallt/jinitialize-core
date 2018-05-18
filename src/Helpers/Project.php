@@ -2,6 +2,8 @@
 
 namespace Nonetallt\Jinitialize\Helpers;
 
+use SebastiaanLuca\StubGenerator\StubGenerator;
+
 class Project
 {
     private $basePath;
@@ -11,7 +13,7 @@ class Project
         $this->basePath = $basePath;
     }
 
-    public function isPathValid(string $path = null)
+    public static function isPathValid(string $path = null)
     {
         if(is_null($path)) $path = $this->basePath;
 
@@ -26,15 +28,31 @@ class Project
 
     public function createStructure(array $structure)
     {
-        foreach($structure as $folder => $subfolders) {
+        $folder = new Folder($this->getFolderName(), $structure);
+        $folder->create($this->getParentFolderPath(), 0755, true);
+    }
 
-            if(empty($subfolders)) {
-                mkdir("$to/$folder");
-            }
-            foreach($subfolders as $subfolder) {
-                mkdir("$to/$folder/$subfolder", 0755, true);
-            }
+    public function getParentFolderPath()
+    {
+        return dirname($this->basePath);
+    }
+
+    public function getFolderName()
+    {
+        return Strings::lastAfter($this->basePath, '/');
+    }
+
+    public function copyStubsFrom(string $path, array $replacements)
+    {
+        if(! $this->isPathValid($path)) {
+            return false;
         }
+        $files = array_diff(scandir($path), ['.', '..']);
+
+        foreach($files as $file) {
+            $stub = new StubGenerator("$path/$file", "$this->basePath/$file");
+            $test = $stub->render($replacements);
+        }    
     }
 
     public function copyFilesFrom(string $path)

@@ -3,7 +3,6 @@
 namespace Nonetallt\Jinitialize\Commands;
 
 use Nonetallt\Jinitialize\Plugin\JinitializeCommand as Command;
-use SebastiaanLuca\StubGenerator\StubGenerator;
 
 class CreatePlugin extends Command
 {
@@ -17,23 +16,25 @@ class CreatePlugin extends Command
     {
         $io = $this->getIo();
 
-        $pluginName = 'jinitialize-plugin-' . $io->ask('Give a name for the plugin (jinitialize-plugin-)');
+        /* Ask for variables when not testing */
+        if(env('APP_ENV') !== 'testing') {
+            $pluginName = 'jinitialize-plugin-' . $io->ask('Give a name for the plugin (jinitialize-plugin-)');
+            $description = $io->ask('Give a package description');
+        }
 
-        $projectDir = dirname(__DIR__, 2);
 
         /* Package dir path TODO ask location, use env */
-        $baseDir = dirname(__DIR__, 3);
-        $stubDir = "$projectDir/stubs/plugin";
+        $baseDir    = dirname(__DIR__, 3);
+        $projectDir = dirname(__DIR__, 2);
+        $stubDir    = "$projectDir/stubs/plugin";
 
 
         $project = new Project("$baseDir/$pluginName");
         
         if(! $project->isPathValid()) {
-            $this->abort("Project directory already exists: $dest");
+            $this->abort("Project directory already exists or is not writable: $dest");
         }
-        if(! $project->createFolder()) {
-            $this->abort("Could not create project folder at: $dest");
-        }
+        
         $project->createStructure([
             'src' => [],
             'tests' => [
@@ -45,6 +46,13 @@ class CreatePlugin extends Command
         ]);
 
         $project->copyFilesFrom($stubDir);
+        $project->copyStubsFrom($stubDir, [
+            '[PLUGIN_NAME]'        => $composerName,
+            '[PLUGIN_DESCRIPTION]' => $description,
+            '[AUTHOR_NAME]'        => $author,
+            '[AUTHOR_EMAIL]'       => $email,
+            '[PLUGIN_NAMESPACE]'   => $namespace,
+        ]);
 
 
         $authorNick = 'nonetallt';
@@ -52,49 +60,29 @@ class CreatePlugin extends Command
         $email = 'jyri.mikkola@pp.inet.fi';
         $composerName = "$authorNick/$pluginName";
 
-        $pluginParts = explode('-', $pluginName);
-        array_walk($pluginParts, function($part) {
-            return ucfirst($part) . '\\\\';
-        });
-
-        $namespace = ucfirst($authorNick) . '\\\\' . implode('', $pluginParts);
-        /* $namespace = ucfirst($authorNick) . '\\\\' . ucfirst($pluginName) . '\\\\'; */
-
-        $description = $io->ask('Give a package description');
-
-        /* foreach($files as $file) { */
-        /*     $stub = new StubGenerator("$stubDir/$file", "$dest/$file"); */
-        /*     $test = $stub->render([ */
-        /*         '[PLUGIN_NAME]'        => $composerName, */
-        /*         '[PLUGIN_DESCRIPTION]' => $description, */
-        /*         '[AUTHOR_NAME]'        => $author, */
-        /*         '[AUTHOR_EMAIL]'       => $email, */
-        /*         '[PLUGIN_NAMESPACE]'   => $namespace, */
-        /*     ]); */
-        /* } */
-
         
     }
 
-    /* TODO placegolder */
-    public function __set($key, $value)
+    public function recommendsDefaults()
     {
-        $this->attributes[$key] = $value;
+        return [
+            'packages directory',
+            'author name',
+            'author nickname',
+            'author email'
+        ];
     }
 
-    public function createComposerFile(string $name, string $description, string $author, string $email, string $namespace)
+    public function importsVariables()
     {
-        $stub = new StubGenerator("$stubDir/$file", "$dest/$file");
-        $test = $stub->render([
-            '[PLUGIN_NAME]'        => $name,
-            '[PLUGIN_DESCRIPTION]' => $description,
-            '[AUTHOR_NAME]'        => $author,
-            '[AUTHOR_EMAIL]'       => $email,
-            '[PLUGIN_NAMESPACE]'   => $namespace,
-        ]);
+
     }
 
-    
+    public function exportsVariables()
+    {
+
+    }
+
     public function revert()
     {
 

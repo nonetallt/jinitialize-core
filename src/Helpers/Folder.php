@@ -68,6 +68,24 @@ class Folder
         return $this->subfolders;
     }
 
+    public function create(string $path, int $permissions = 0755, bool $recursive = false)
+    {
+        $mainFolder = "$path/$this->name";
+
+        if(! Project::isPathValid($path)) {
+            throw new \Exception("Cannot create folder structure at $path, path does not exist or is not writable.");
+        }
+
+        mkdir($mainFolder, $permissions);
+
+        /* Create folders for all subfolders recursively */
+        if($recursive) {
+            foreach($this->subfolders as $folder) {
+                $folder->create($mainFolder, $permissions, $recursive);
+            }
+        }
+    }
+
     public function __toString()
     {
         return $this->print();

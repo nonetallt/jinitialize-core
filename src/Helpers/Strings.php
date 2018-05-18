@@ -5,6 +5,7 @@ namespace Nonetallt\Jinitialize\Helpers;
 class Strings
 {
 
+    /* str_after */
     public static function cutAfter(string $subject, string $until)
     {
         $stopAt = strpos($subject, $until);
@@ -19,6 +20,7 @@ class Strings
         return $cut;
     }
 
+    /* str_until */
     public static function cutUntil(string $subject, string $until, bool $includeStop = true)
     {
         $startAt = strpos($subject, $until);
@@ -34,6 +36,35 @@ class Strings
         return $cut;
     }
 
+    public static function packageNamespace(string $author, $pluginName)
+    {
+        $pluginParts = explode('-', $pluginName);
+
+        array_walk($pluginParts, function(&$part) {
+            $part = ucfirst($part) . '\\\\';
+        });
+
+        $namespace = ucfirst($author) . '\\\\' . implode('', $pluginParts);
+        return $namespace;
+    }
+
+    public static function afterLast(string $subject, string $last)
+    {
+        $parts = explode($last, $subject);
+        return $parts[count($parts) -1];
+    }
+
+    public static function untilLast(string $subject, string $last)
+    {
+        $parts = explode($last, $subject);
+
+        /* Remove last part from the array */
+        array_pop($parts);
+
+        return implode('/', $parts);
+    }
+
+    /* str_replace_first */
     public static function replaceFirst(string $target, string $replacement, string $subject)
     {
         $pos = strpos($subject, $target);

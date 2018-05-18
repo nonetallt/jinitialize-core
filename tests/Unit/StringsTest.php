@@ -45,5 +45,23 @@ class StringsTest extends TestCase
         $result = Strings::replaceFirst('abc', 'asd', 'abc1 abc2 abc3');
         $this->assertEquals('asd1 abc2 abc3', $result);
     }
+
+    public function testAfterLast()
+    {
+        $result = Strings::afterLast('App/Domain/Helpers/Traits', '/');
+        $this->assertEquals('Traits', $result);
+    }
+
+    public function testUntilLast()
+    {
+        $result = Strings::untilLast('App/Domain/Helpers/Traits', '/');
+        $this->assertEquals('App/Domain/Helpers', $result);
+    }
+
+    public function testPackageNamespace()
+    {
+        $result = Strings::packageNamespace('nonetallt', 'jinitialize-plugin-composer');
+        $this->assertEquals('Nonetallt\\\\Jinitialize\\\\Plugin\\\\Composer\\\\', $result);
+    }
         
 }
