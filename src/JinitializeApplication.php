@@ -6,17 +6,17 @@ use Symfony\Component\Console\Application;
 use Dotenv\Dotenv;
 use Nonetallt\Jinitialize\Commands\CreatePlugin;
 use Nonetallt\Jinitialize\Procedure;
+use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
+use Nonetallt\Jinitialize\Plugin\Plugin;
 
 class JinitializeApplication extends Application
 {
-    private $plugins;
     private $container;
 
     public function __construct(string $dotenvDir)
     {
         parent::__construct();
         $this->container = new JinitializeContainer();
-        $this->plugins = [];
 
         /* Load .env when application is created */
         $dotenv = new Dotenv($dotenvDir);
@@ -26,7 +26,6 @@ class JinitializeApplication extends Application
     public function registerPlugins(string $packagesFile)
     {
         $packages = [];
-        $this->pluginsFile = $packagesFile;
 
         if(file_exists($packagesFile)) {
             /* Return the var_export */
@@ -36,12 +35,16 @@ class JinitializeApplication extends Application
         foreach($packages as $package) {
             if(!empty($package['plugins'])) {
                 foreach($package['plugins'] as $plugin) {
-                    $this->plugins = $plugin;
+                    $this->registerPlugin($plugin);
                 }
             }
         }
+    }
 
-        $this->registerCommands();
+    public function registerPlugin(Plugin $plugin)
+    {
+        $this->container->addPlugin($plugin);
+        $this->registerCommands($plugin);
     }
 
     public function getContainer()
@@ -49,27 +52,38 @@ class JinitializeApplication extends Application
         return $this->container;
     }
 
-    public function getPlugins()
+    public function registerProcedures()
     {
-        return $this->plugins;
+
     }
 
-    private function registerCommands()
+    /**
+     * Register all commands for a given plugin
+     */
+    private function registerCommands(Plugin $plugin)
     {
-        foreach($this->plugins as $plugin) {
-
-            $this->container->createPlugin($plugin->getName());
-
-            foreach($plugin->commands() as $commandClass) {
-                $command = new $commandClass();
-                $this->add($command);
-            }
+        foreach($plugin->commands() as $commandClass) {
+            $command = new $commandClass($plugin);
+            $this->add($command);
         }
 
-        /* TODO Create procedure out of every single command */ 
-        $command = new CreatePlugin();
-        $procedure = new Procedure($command->getName(), $command->getDescription(), [$command]);
-        $procedure->setContainer($this->container);
+        /* TODO move? application commands */
+        /* $this->add(new CreatePlugin($plugin)); */
+    }
+
+    public function registerProcedure(Procedure $procedure, Plugin $plugin = null)
+    {
+        /* Register procedure */
         $this->add($procedure);
+
+        /* Register every command used by procedure so they can be run by procedure */
+        foreach($procedure->getCommands() as $command) {
+            $this->registerCommand($command, $plugin);
+        }
+
+        /* Add container managed by application to the procedure */
+        $procedure->setContainer($this->container);
+
+        return $procedure;
     }
 }

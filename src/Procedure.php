@@ -18,7 +18,6 @@ class Procedure extends Command
     private $user;
     private $name;
     private $description;
-    private $container;
     private $io;
 
     public function __construct(string $name, string $description, array $commands)
@@ -63,7 +62,7 @@ class Procedure extends Command
 
             try {
                 $command->run(new ArrayInput([]), $output);
-                $this->exportVariables($command, $this->io);
+                var_dump($command->getPlugin()->getContainer());
             }
             catch(CommandAbortedException $e) {
 
@@ -79,31 +78,6 @@ class Procedure extends Command
 
         $this->io->success("Procedure $this->name completed");
         return true;
-    }
-
-    public function setContainer(JinitializeContainer $container) 
-    {
-        $this->container = $container;
-    }
-
-    private function exportVariables(JinitializeCommand $command, SymfonyStyle $io)
-    {
-        /* Skip if command does not define exports */
-        if(! method_exists($command, 'exportsVariables')) return;
-
-        /* Check what keys this command should set */
-        $keys = $command->exportsVariables();
-
-        $variables = [];
-
-        foreach($keys as $key) {
-            $attribute = $command->getAttribute($key);
-            if(is_null($attribute)) {
-                $io->warning("Command {$command->getName()} should import variable $key but the value is null");
-            }
-            $variables[$key] = $attribute;
-        }
-        $this->container->getPlugin($command->getPlugin()->getName())->exportVariables($variables);
     }
 
     /**
@@ -139,6 +113,9 @@ class Procedure extends Command
         return false;
     }
 
+    /**
+     * Variables exported by all commands in this procedure
+     */
     public function exportsVariables()
     {
         $vars = [];
@@ -146,6 +123,11 @@ class Procedure extends Command
             $vars[] = $command->exportsVariables();
         }
         return $vars;
+    }
+
+    public function getCommands()
+    {
+        return $this->commands;
     }
 
     /** 

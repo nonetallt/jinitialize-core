@@ -9,10 +9,11 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Nonetallt\Jinitialize\Procedure;
 use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
 use Tests\Traits\MocksCommands;
+use Tests\Traits\Paths;
 
 class ProcedureTest extends TestCase
 {
-    use MocksCommands;
+    use MocksCommands, Paths;
 
     /**
      * Make sure class can be initialized
@@ -35,7 +36,7 @@ class ProcedureTest extends TestCase
         ]);
 
         /* Assert that both commands write their name in the output file */
-        $this->assertEquals("example1example2", file_get_contents(self::getOutputFile()));
+        $this->assertEquals("example1example2", file_get_contents($this->outputFile()));
     }
 
     /**
@@ -52,7 +53,7 @@ class ProcedureTest extends TestCase
         $procedure->revert();
 
         /* Assert that both commands write their name in the output file */
-        $this->assertEquals("", file_get_contents(self::getOutputFile()));
+        $this->assertEquals("", file_get_contents($this->outputFile()));
     }
 
     /**

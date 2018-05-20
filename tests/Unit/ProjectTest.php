@@ -5,23 +5,22 @@ namespace Tests\Feature;
 use PHPunit\Framework\TestCase;
 use Nonetallt\Jinitialize\Helpers\Project;
 use Nonetallt\Jinitialize\JinitializeApplication;
+use Nonetallt\Jinitialize\Plugin\PluginContainer;
+
+use Tests\Traits\CleansOutput;
 
 class ProjectTest extends TestCase
 {
+    use CleansOutput;
+
     private $project;
     private $stubsFolder;
     private $libraryRoot;
 
     public function testCreatePluginComposerStub()
     {
-        $app = new JinitializeApplication($this->libraryRoot);
-        $app->registerPlugins($this->libraryRoot.'/boostrap/cache/plugins.php');
-
-        $container = $app->getContainer();
-        $container->createPlugin('test');
-
-        $plugin = $container->getPlugin('test');
-        $plugin->exportVariables([
+        $container = new PluginContainer('test');
+        $container->setArray([
             'authorName'        => 'Jyri Mikkola',
             'authorEmail'       => 'jyri.mikkola@pp.inet.fi',
             'nickname'          => 'nonetallt',
@@ -30,10 +29,7 @@ class ProjectTest extends TestCase
             'pluginDescription' => 'This is a test'
         ]);
 
-        $this->project->copyStubsFrom($this->stubsFolder, $plugin->exportData());
-
-        /* $command = new \Nonetallt\Jinitialize\Commands\CreatePlugin(); */
-        
+        $this->project->copyStubsFrom($this->stubsFolder, $container->exportData());
         $expected = $this->libraryRoot . '/tests/expected/composer.json';
         $output = $this->project->getPath().'/composer.json';
         $this->assertEquals(file_get_contents($expected), file_get_contents($output));
@@ -60,31 +56,13 @@ class ProjectTest extends TestCase
      */
     public function setUp()
     {
-        $folder = __DIR__ . '/../output';
-        $this->removeDirectoryContents($folder);
+        $this->cleanOutput();
 
         /* Create project in the output directory */
-        $this->project = new Project($folder . '/project');
+        $this->project = new Project($this->outputFolder() . '/project');
         $this->libraryRoot = dirname(dirname(__DIR__));
         $this->stubsFolder = $this->libraryRoot . '/stubs/plugin';
     }
 
-    private function removeDirectoryContents(string $dir, int $level = 1)
-    {
-        if(! is_dir($dir)) return;
-        
-        $objects = scandir($dir); 
-
-        foreach ($objects as $object) { 
-            if ($object != "." && $object != "..") { 
-                if (is_dir($dir."/".$object)) {
-                    $this->removeDirectoryContents($dir."/".$object, $level+1);
-                }
-                else {
-                    unlink($dir."/".$object); 
-                }
-            } 
-        }
-        if($level > 1) rmdir($dir); 
-    }
+    
 }

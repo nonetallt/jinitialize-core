@@ -229,12 +229,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nonetallt/jinitialize-plugin.git",
-                "reference": "cd8a27cffece9851742c4257ba45aaeea6ecb1c9"
+                "reference": "edf85f8ff6271320114d9e5ef6d8532e5dbd3d2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nonetallt/jinitialize-plugin/zipball/cd8a27cffece9851742c4257ba45aaeea6ecb1c9",
-                "reference": "cd8a27cffece9851742c4257ba45aaeea6ecb1c9",
+                "url": "https://api.github.com/repos/nonetallt/jinitialize-plugin/zipball/edf85f8ff6271320114d9e5ef6d8532e5dbd3d2f",
+                "reference": "edf85f8ff6271320114d9e5ef6d8532e5dbd3d2f",
                 "shasum": ""
             },
             "require": {
@@ -265,7 +265,7 @@
                 }
             ],
             "description": "Plugin core components for nonetallt/jinitialize",
-            "time": "2018-05-18 12:53:22"
+            "time": "2018-05-20 10:52:58"
         },
         {
             "name": "psr/container",

@@ -9,6 +9,11 @@
     },
     "laravel-local": { 
         "description": "Initializes a new local laravel project.",
+        "onAbort": {
+            "shell": [
+                "rm -r [PROJECT_DIRECTORY]"
+            ]
+        },
         "commands": {
             "mysql": [
                 "create-database",

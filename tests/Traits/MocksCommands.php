@@ -50,14 +50,4 @@ trait MocksCommands
             unlink($file);
         }
     }
-
-    public static function getOutputFolder()
-    {
-        return __DIR__ . '/../output';
-    }
-
-    public static function getOutputFile()
-    {
-        return self::getOutputFolder() . '/command.out';
-    }
 }

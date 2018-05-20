@@ -1,5 +1,7 @@
 #TODO
 
+* make sure optional methods are public
+
 * generic
     * generic php library module
     * project structure package (from create plugin structure)

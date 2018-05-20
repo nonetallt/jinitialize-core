@@ -2,44 +2,32 @@
 
 namespace Nonetallt\Jinitialize;
 
+use Nonetallt\Jinitialize\Plugin\Plugin;
+
 class JinitializeContainer
 {
-    private $data;
+    private $plugins;
 
     public function __construct()
     {
-        $this->data = [];
+        $this->plugins = [];
     }
 
-    public function createPlugin(string $name)
+    public function addPlugin(Plugin $plugin)
     {
-        $this->data[$name] = new JinitializePluginContainer($name);
-        return $this->data;
+        $this->plugins[$plugin->getName()] = $plugin;
+
+        return $this->plugins;
     }
 
     public function getPlugin(string $name)
     {
-        if(! isset($this->data[$name])) throw new \Exception("Plugin $name not found");
-        return $this->data[$name];
+        if(! isset($this->plugins[$name])) throw new \Exception("Plugin $name not found");
+        return $this->plugins[$name];
     }
 
-    /* public function get(string $key, string $plugin = null) */
-    /* { */
-    /*     if(is_null($plugin)) { */
-    /*         if(is_null($this->plugin)) throw new \Exception('Something went wrong'); */
-    /*         $plugin = $this->plugin; */
-    /*     } */
-
-    /*     if(! isset($this->data[$plugin])) { */
-    /*         throw new \Exception("Can't get data from '$plugin' : plugin not found."); */
-    /*     } */
-
-    /*     $pluginContainer = $this->data[$plugin]; */
-
-    /*     if(! isset($pluginContainer[$key])) { */
-    /*         throw new \Exception("Key '$key' is not set for plugin '$plugin'"); */
-    /*     } */
-
-    /*     return $pluginContainer[$key]; */
-    /* } */
+    public function getPlugins()
+    {
+        return $this->plugins;
+    }
 }

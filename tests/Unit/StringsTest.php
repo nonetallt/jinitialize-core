@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use PHPunit\Framework\TestCase;
 use Nonetallt\Jinitialize\Helpers\Strings;
+use Nonetallt\Jinitialize\Plugin\PluginContainer;
 
 class StringsTest extends TestCase
 {
@@ -72,7 +73,7 @@ class StringsTest extends TestCase
 
     public function testConvertToStubCase()
     {
-        $result = \Nonetallt\Jinitialize\JinitializePluginContainer::transformForStub('testVariable');
+        $result = PluginContainer::transformForStub('testVariable');
         $this->assertEquals('[TEST_VARIABLE]', $result);
     }
         
