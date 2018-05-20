@@ -62,7 +62,6 @@ class Procedure extends Command
 
             try {
                 $command->run(new ArrayInput([]), $output);
-                var_dump($command->getPlugin()->getContainer());
             }
             catch(CommandAbortedException $e) {
 

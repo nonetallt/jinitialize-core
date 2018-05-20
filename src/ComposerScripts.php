@@ -23,11 +23,12 @@ class ComposerScripts
         $discoverPackages = [];
 
         foreach($installedPackages as $package) {
-            if(!empty($package['extra']['jinitialize'])) {
-                $packageInfo = $package['extra']['jinitialize'];
+            if(!empty($package['extra']['jinitialize-plugin'])) {
+                $packageInfo = $package['extra']['jinitialize-plugin'];
 
                 $discoverPackages[$package['name']] = [];
 
+                /* TODO */
                 if(!empty($packageInfo['plugins'])) {
                     $discoverPackages[$package['name']['plugins']] = $packageInfo['plugins'];
                 }

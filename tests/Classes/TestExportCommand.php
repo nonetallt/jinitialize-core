@@ -14,8 +14,8 @@ class TestExportCommand extends JinitializeCommand
 
     protected function handle()
     {
-        $this->setAttribute('variable1', 'value1');
-        $this->setAttribute('variable2', 'value2');
+        $this->export('variable1', 1);
+        $this->export('variable2', 2);
     }
 
     public function exportsVariables()

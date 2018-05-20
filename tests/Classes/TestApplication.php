@@ -6,25 +6,63 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Nonetallt\Jinitialize\Plugin\Plugin;
 use Nonetallt\Jinitialize\JinitializeApplication;
 use Nonetallt\Jinitialize\Procedure;
+use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
 
 class TestApplication extends JinitializeApplication
 {
+    private $plugin;
+
     public function __construct(string $path)
     {
         parent::__construct($path);
     }
 
-    public function testCommands(array $commands)
-    {
-        /* Register the commands as a single procedure to the test plugin */
-        $this->registerPlugin($this->createPlugin('test', $commands));
+    public function createCommand(string $name, callable $handle, callable $revert) {
+        $mock =  new class($name, $handle, $revert) extends JinitializeCommand {
 
-        $this->executeCommands($commands);
+            private $name;
+            private $desc;
+            private $handle;
+
+            public function __construct($name, $handle, $revert)
+            {
+                $this->name = $name;
+                $this->handle = $handle;
+                $this->revert = $revert;
+                parent::__construct('testPlugin');
+            }
+
+            protected function configure()
+            {
+                $this->setName($this->name);
+            }
+
+            protected function handle() 
+            {
+                ($this->handle)($this);
+            }
+
+            public function revert() 
+            {
+                ($this->revert)($this);
+            }
+        };
+        $this->add($mock);
+        return $mock;
     }
 
-    private function executeCommands(array $commands)
+    public function testProcedure(string $name, array $commands)
     {
-        foreach($commands as $commandClass) {
+        $procedure = new Procedure($name, 'desc', $commands);
+        $this->add($procedure);
+        $this->executeCommands([ $procedure ]);
+
+        return $procedure;
+    }
+
+    public function executeCommands(array $commands)
+    {
+        foreach($commands as $command) {
             $command = $this->find($command->getName());
             $commandTester = new CommandTester($command);
 
@@ -32,34 +70,5 @@ class TestApplication extends JinitializeApplication
                 'command' => $command->getName()
             ]);
         }
-    }
-
-    private function createPlugin(string $name, array $commands)
-    {
-        $plugin = new class($name, $commands) extends Plugin {
-
-            private $commands;
-
-            function __construct(string $name, array $commands)
-            {
-                parent::__construct($name);
-                $this->commands = $commands;
-            }
-
-            function commands()
-            {
-                return $this->commands;
-
-            }
-
-            function procedures()
-            {
-                return [
-                    /* new Procedure('test', 'Run a test procedure', $this->commands) */
-                ];
-            }
-        };
-    
-        return $plugin;
     }
 }

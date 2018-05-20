@@ -9,14 +9,15 @@ use Nonetallt\Jinitialize\Procedure;
 use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
 use Nonetallt\Jinitialize\Plugin\Plugin;
 
+/**
+ * Responsible for registering the application commands and procedures
+ *
+ */
 class JinitializeApplication extends Application
 {
-    private $container;
-
     public function __construct(string $dotenvDir)
     {
         parent::__construct();
-        $this->container = new JinitializeContainer();
 
         /* Load .env when application is created */
         $dotenv = new Dotenv($dotenvDir);
@@ -41,20 +42,15 @@ class JinitializeApplication extends Application
         }
     }
 
-    public function registerPlugin(Plugin $plugin)
+    private function registerPlugin(Plugin $plugin)
     {
-        $this->container->addPlugin($plugin);
         $this->registerCommands($plugin);
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
     }
 
     public function registerProcedures()
     {
-
+        /* TODO */
+        /* procedure factory */
     }
 
     /**
@@ -68,7 +64,7 @@ class JinitializeApplication extends Application
         }
 
         /* TODO move? application commands */
-        /* $this->add(new CreatePlugin($plugin)); */
+        $this->add(new CreatePlugin('core'));
     }
 
     public function registerProcedure(Procedure $procedure, Plugin $plugin = null)
@@ -80,9 +76,6 @@ class JinitializeApplication extends Application
         foreach($procedure->getCommands() as $command) {
             $this->registerCommand($command, $plugin);
         }
-
-        /* Add container managed by application to the procedure */
-        $procedure->setContainer($this->container);
 
         return $procedure;
     }

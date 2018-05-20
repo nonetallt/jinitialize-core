@@ -7,8 +7,12 @@ use Nonetallt\Jinitialize\Installer;
 use Dotenv\Dotenv;
 use SebastiaanLuca\StubGenerator\StubGenerator;
 
+use Tests\Traits\CleansOutput; 
+
 class GenerateStubTest extends TestCase
 {
+    use CleansOutput;
+
     public function testApache2ConfStub()
     {
         $dotenv = new Dotenv(__DIR__ . '/../..');
@@ -28,20 +32,5 @@ class GenerateStubTest extends TestCase
         ]);
 
         $this->assertEquals(file_get_contents($output), file_get_contents($expected));
-    }
-
-    /**
-     * Remove files generated from stubs from the output folder
-     */
-    public function setUp()
-    {
-        $folder = __DIR__ . '/../output';
-
-        /* Get all filenames with .out extension */
-        $files = glob("$folder/*.out");
-
-        foreach($files as $file) {
-            unlink($file);
-        }
     }
 }

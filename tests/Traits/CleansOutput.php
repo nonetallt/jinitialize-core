@@ -13,8 +13,7 @@ trait CleansOutput
 
     protected function cleanOutput()
     {
-        var_dump($this->outputFolder());
-        /* $this->removeDirectoryContents($dir); */
+        $this->removeDirectoryContents($this->outputFolder());
     }
 
     private function removeDirectoryContents(string $dir, int $level = 1)

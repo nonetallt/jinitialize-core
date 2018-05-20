@@ -1,5 +1,7 @@
 #TODO
 
+* create test for new plugins that checks if promised variables are exported
+
 * make sure optional methods are public
 
 * generic

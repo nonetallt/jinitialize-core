@@ -10,6 +10,8 @@ use Tests\Classes\TestApplication;
 
 use Tests\Classes\TestExportCommand;
 use Nonetallt\Jinitialize\Procedure;
+use Nonetallt\Jinitialize\Plugin\JinitializeContainer;
+use Nonetallt\Jinitialize\Plugin\Plugin;
 
 class ExportImportVariablesTest extends TestCase
 {
@@ -18,14 +20,16 @@ class ExportImportVariablesTest extends TestCase
     public function testExportVariablesToContainer()
     {
         $app = new TestApplication($this->projectRoot());
-        $exportCommand = TestExportCommand::class;
-        $container = $app->getContainer();
 
-        $app->testCommands([$exportCommand]);
+        /* Create a new export command in plugin called testPlugin */
+        $exportCommand = new TestExportCommand('testPlugin');
+        JinitializeContainer::getInstance()->addPlugin(new Plugin('testPlugin'));
+        $app->add($exportCommand);
+        $app->executeCommands([$exportCommand]);
 
-        var_dump($exportCommand->getPlugin('test')->getContainer());
+        $pluginContainer = JinitializeContainer::getInstance()->getPlugin('testPlugin')->getContainer();
 
-        $this->assertEquals(['variable1', 'variable2'], $container->getPlugin('test')->getContainer()->getData());
+        $this->assertEquals(['variable1' => 1, 'variable2' => 2], $pluginContainer->getData());
     }
 
     public function testImportVariablesFromContainer()
