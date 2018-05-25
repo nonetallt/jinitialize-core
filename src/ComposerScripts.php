@@ -51,7 +51,7 @@ class ComposerScripts
      */
     public static function loadPluginsManifest(string $path)
     {
-        if(! file_exists($packagesFile)) return [];
+        if(! file_exists($path)) return [];
 
         /* Return the var_export */
         return include $path;

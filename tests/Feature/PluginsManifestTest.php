@@ -31,11 +31,10 @@ class PluginsManifestTest extends TestCase
             ]];
 
         ComposerScripts::generatePluginsManifest($data, $output);
+        $plugin = ComposerScripts::loadPluginsManifest($output);
 
-        var_dump(file_get_contents($output));
-
-        $result = include $output;
-        var_dump($result);
-        /* $this->assertTrue(include $output); */
+        /* Assert that loaded data matches the exported data */
+        /* For test purposes, data only contains index 0 of export */
+        $this->assertEquals([$data[0]['extra']['jinitialize-plugin']], $plugin);
     }
 }
