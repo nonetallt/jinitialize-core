@@ -24,30 +24,45 @@ class JinitializeApplication extends Application
         $dotenv->load();
     }
 
-    public function registerPlugins(string $packagesFile)
+    public function registerApplicationCommands()
+    {
+        $this->add(new CreatePlugin('core'));
+    }
+
+    public function registerPlugins(string $pluginsManifest)
     {
         $packages = [];
+        $plugins = ComposerScripts::loadPluginsManifest($pluginsManifest);
 
-        if(file_exists($packagesFile)) {
-            /* Return the var_export */
-            $packages = include $packagesFile;
-        }
-
-        foreach($packages as $package) {
-            if(!empty($package['plugins'])) {
-                foreach($package['plugins'] as $plugin) {
-                    $this->registerPlugin($plugin);
-                }
-            }
+        foreach($plugins as $plugin) {
+            $this->registerPlugin($plugin);
         }
     }
 
-    private function registerPlugin(Plugin $plugin)
+    /**
+     * Register a plugin found in manifest file
+     *
+     * @param array $plugin
+     * @return null
+     */
+    private function registerPlugin(array $plugin)
     {
-        $this->registerCommands($plugin);
+        /* Dont't process nameless plugins */
+        if(! isset($plugin['name'])) return;
+
+        /* Create a container for the plugin */
+        JinitializeContainer::getInstance()->addPlugin($plugin['name']);
+
+        if(isset($plugin['commands'])) {
+            $this->registerCommands($plugin['name'], $plugin['commands']);
+        }
+
+        if(isset($plugin['procedures'])) {
+            $this->registerProcedures($plugin['name'], $plugin['procedures']);
+        }
     }
 
-    public function registerProcedures()
+    private function registerProcedures(string $plugin, array $procedures)
     {
         /* TODO */
         /* procedure factory */
@@ -56,27 +71,11 @@ class JinitializeApplication extends Application
     /**
      * Register all commands for a given plugin
      */
-    private function registerCommands(Plugin $plugin)
+    private function registerCommands(string $plugin, array $commands)
     {
-        foreach($plugin->commands() as $commandClass) {
+        foreach($commands as $commandClass) {
             $command = new $commandClass($plugin);
             $this->add($command);
         }
-
-        /* TODO move? application commands */
-        $this->add(new CreatePlugin('core'));
-    }
-
-    public function registerProcedure(Procedure $procedure, Plugin $plugin = null)
-    {
-        /* Register procedure */
-        $this->add($procedure);
-
-        /* Register every command used by procedure so they can be run by procedure */
-        foreach($procedure->getCommands() as $command) {
-            $this->registerCommand($command, $plugin);
-        }
-
-        return $procedure;
     }
 }

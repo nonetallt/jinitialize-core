@@ -26,7 +26,7 @@ class ExportImportVariablesTest extends TestCase
         $exportCommand = new TestExportCommand('testPlugin');
 
         /* Create the mock plugin */
-        JinitializeContainer::getInstance()->addPlugin(new Plugin('testPlugin'));
+        JinitializeContainer::getInstance()->addPlugin('testPlugin');
 
         /* Register the command in kernel */
         $app->add($exportCommand);
@@ -47,7 +47,7 @@ class ExportImportVariablesTest extends TestCase
         $importCommand = new TestImportCommand('testPlugin');
 
         /* Create the mock plugin */
-        JinitializeContainer::getInstance()->addPlugin(new Plugin('testPlugin'));
+        JinitializeContainer::getInstance()->addPlugin('testPlugin');
 
         /* Register the command in kernel */
         $app->add($exportCommand);

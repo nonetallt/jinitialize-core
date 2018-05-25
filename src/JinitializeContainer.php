@@ -2,8 +2,6 @@
 
 namespace Nonetallt\Jinitialize;
 
-use Nonetallt\Jinitialize\Plugin;
-
 class JinitializeContainer
 {
     private $plugins;
@@ -22,9 +20,9 @@ class JinitializeContainer
         return self::$instance;
     }
 
-    public function addPlugin(Plugin $plugin)
+    public function addPlugin(string $plugin)
     {
-        $this->plugins[$plugin->getName()] = $plugin;
+        $this->plugins[$plugin] = new Plugin($plugin);
 
         return $this->plugins;
     }
