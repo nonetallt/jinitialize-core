@@ -1,13 +1,11 @@
 {
-    "name": "nonetallt/install-site",
-    "description": "Install a new local apache2 site configured for laravel",
-    "type": "project",
+    "name": "nonetallt/jinitialize-core",
+    "description": "Core components for jinitialize projects",
+    "type": "library",
     "require": {
         "php": ">=7.0.0",
         "vlucas/phpdotenv": "^2.4",
-        "sebastiaanluca/php-stub-generator": "^0.1.1",
-        "symfony/console": "^3.4",
-        "nonetallt/jinitialize-plugin": "dev-master"
+        "symfony/console": "^3.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^6",

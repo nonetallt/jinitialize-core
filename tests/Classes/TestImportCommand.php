@@ -16,7 +16,7 @@ class TestImportCommand extends JinitializeCommand
     {
         $v1 = $this->import('testPlugin', 'variable1');
         $v2 = $this->import('testPlugin', 'variable2');
-        $this->export('variable3', 'variable1variable2');
+        $this->export('variable3', $v1 . $v2);
     }
 
     public function exportsVariables()

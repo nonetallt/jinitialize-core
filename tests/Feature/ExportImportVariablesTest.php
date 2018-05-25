@@ -58,6 +58,6 @@ class ExportImportVariablesTest extends TestCase
 
 
         $pluginContainer = JinitializeContainer::getInstance()->getPlugin('testPlugin')->getContainer();
-        $this->assertContains('variable1variable2', $pluginContainer->getData());
+        $this->assertContains('12', $pluginContainer->getData());
     }
 }

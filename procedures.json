@@ -42,5 +42,37 @@
                 "chgrp -R www-data {APP_PATH}/{APP_NAME}"
             ]
         }
+    },
+    "php-package": {
+        "description": "Create a new generic php package.",
+        "commands": {
+            "project": [
+                "create",
+                "folder src",
+                "folder tests",
+                "folder tests/Unit",
+                "folder tests/Feature",
+                "folder tests/Traits",
+                "folder tests/output",
+                "copy phpunit.xml",
+                "copy-stub composer.stub"
+            ],
+            "phpunit": [ 
+                
+            ],
+            "composer": [
+
+            ],
+            "git": [
+                "init",
+                "create-upstream-github",
+                "ignore tags",
+                "ignore vendor",
+                "ignore tests/output"
+            ],
+            "shell": [
+                "ctags -R --fields=+laimS --languages=php --exclude=.git"
+            ]
+        }
     }
 }
