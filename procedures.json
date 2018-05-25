@@ -19,9 +19,14 @@
                 "create-database",
                 "create-user"
             ],
-            "laravel": [
-                "create-project",
-                "mysql-database"
+            "composer": [
+                "create-project laravel/laravel"
+            ],
+            ".env": [
+                "set-value DB_CONNECTION mysql",
+                "set-value DB_DATABASE",
+                "set-value DB_USERNAME",
+                "set-value DB_PASSWORD"
             ],
             "shell": [
                 "tags"

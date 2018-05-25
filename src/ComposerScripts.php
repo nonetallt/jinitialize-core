@@ -17,8 +17,6 @@ class ComposerScripts
             $packages = json_decode(file_get_contents($path), true);
         }
 
-        var_dump($packages);
-
         self::generatePluginsManifest($packages, __DIR__ . '/../bootstrap/cache/plugins.php');    
     }
 

@@ -20,16 +20,32 @@ class JinitializeContainer
         return self::$instance;
     }
 
+    /**
+     * Used for testing
+     */
+    public static function resetInstance()
+    {
+        self::$instance = null;
+    }
+
     public function addPlugin(string $plugin)
     {
-        $this->plugins[$plugin] = new Plugin($plugin);
+        if(isset($this->plugins[$plugin])) {
+            throw new \Exception("Plugin $plugin is already registered!");
+        }
 
+        $this->plugins[$plugin] = new Plugin($plugin);
         return $this->plugins;
+    }
+
+    public function hasPlugin(string $name)
+    {
+        return isset($this->plugins[$name]);
     }
 
     public function getPlugin(string $name)
     {
-        if(! isset($this->plugins[$name])) throw new \Exception("Plugin $name not found");
+        if(! $this->hasPlugin($name)) throw new \Exception("Plugin $name not found");
         return $this->plugins[$name];
     }
 

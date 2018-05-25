@@ -8,7 +8,7 @@ class TestImportCommand extends JinitializeCommand
 {
     protected function configure()
     {
-        $this->setName('variables:import');
+        $this->setName('test:import');
         $this->setDescription('Import variables test');
     }
 

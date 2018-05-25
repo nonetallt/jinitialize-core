@@ -1,31 +1,51 @@
-#TODO
+# TODO
 
-* create test for new plugins that checks if promised variables are exported
+## jinitialize
+
+* project structure
+* git setup
+* packagist setup
+* every command should be wrapped in a procedure
+
+
+## jinitialize-core
 
 * make sure optional methods are public
-
-* generic
-    * generic php library module
-    * project structure package (from create plugin structure)
-    * stub wrapper convert 'plugin name' to [PLUGIN_NAME]
-
-* procedure
-    * create container that allows storing of values from earlier commands
-    * on failure, all executed commands should be reverted, command class can
-    revert all subclasses in its revert method
-    * every command should be wrapped in a procedure
+* composerScripts: print suggested settings list
+* procedure: print suggested settings list?
+* use values from other modules when possible (display which module value comes from)
+* exported settings
+* exported procedures
+* procedure factory
+    * when plugin is not found, use composer search to suggest packages to install
 
 
-* db module
-    * check if database already exists before trying to create it
-    * check if user exists
-    * set db default collation
-    * set db default driver innoDB
+## jinitialize-plugin
+
+* git rename
+* packagist rename (composer.json ?)
+* testing documentation
+* recommend documentation on imported and exported variables
+* update jinitialize command documenation (plugin-new)
+
+
+## jinitialize-plugin-project
+
+* refactor composer.json
+* project structure package (from create plugin structure)
+* stub wrapper convert 'plugin name' to [PLUGIN_NAME]
+
+
+## jinitialize-plugin-mysql
+
+* refactor from main project
+* check if database already exists before trying to create it
+* check if user exists
+* set db default collation
+* set db default driver innoDB
 
 
 
-* use values from other modules when possible (display which module value comes
-  from)
 
 
 # Planned modules

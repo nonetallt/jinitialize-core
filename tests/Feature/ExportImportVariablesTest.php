@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use PHPunit\Framework\TestCase;
-use Nonetallt\Jinitialize\Helpers\Project;
-use Nonetallt\Jinitialize\JinitializeApplication;
+/* use PHPunit\Framework\TestCase; */
+use Nonetallt\Jinitialize\Testing\TestCase;
+
 use Tests\Traits\Paths;
 use Tests\Classes\TestApplication;
 
@@ -14,50 +14,24 @@ use Nonetallt\Jinitialize\JinitializeContainer;
 use Nonetallt\Jinitialize\Plugin;
 use Tests\Classes\TestImportCommand;
 
+use PHPunit\Framework\Constraint;
+
 class ExportImportVariablesTest extends TestCase
 {
     use Paths;
 
-    public function testExportVariablesToContainer()
+    public function testExportVariablesFromContainer()
     {
-        $app = new TestApplication($this->projectRoot());
-
-        /* Create a new export command in plugin called testPlugin */
-        $exportCommand = new TestExportCommand('testPlugin');
-
-        /* Create the mock plugin */
-        JinitializeContainer::getInstance()->addPlugin('testPlugin');
-
-        /* Register the command in kernel */
-        $app->add($exportCommand);
-
-        /* Execute the command with comand tester */
-        $app->executeCommands([$exportCommand]);
-
-        $pluginContainer = JinitializeContainer::getInstance()->getPlugin('testPlugin')->getContainer();
-        $this->assertEquals(['variable1' => 1, 'variable2' => 2], $pluginContainer->getData());
+        $this->runCommand(TestExportCommand::class);
+        $this->assertContainerEquals(['variable1' => 1, 'variable2' => 2], 'test');
     }
 
     public function testImportVariablesFromContainer()
     {
-        $app = new TestApplication($this->projectRoot());
+        $this->runCommand(TestExportCommand::class);
+        $this->runCommand(TestImportCommand::class);
 
-        /* Create a new export command in plugin called testPlugin */
-        $exportCommand = new TestExportCommand('testPlugin');
-        $importCommand = new TestImportCommand('testPlugin');
-
-        /* Create the mock plugin */
-        JinitializeContainer::getInstance()->addPlugin('testPlugin');
-
-        /* Register the command in kernel */
-        $app->add($exportCommand);
-        $app->add($importCommand);
-
-        /* Execute the command with comand tester */
-        $app->executeCommands([$exportCommand, $importCommand]);
-
-
-        $pluginContainer = JinitializeContainer::getInstance()->getPlugin('testPlugin')->getContainer();
-        $this->assertContains('12', $pluginContainer->getData());
+        /* $this->assertContainerEquals(['variable1' => 1, 'variable2' => 2, 'variable3' => '12'], 'test'); */
+        $this->assertContainerContains(['variable3' => '12'], 'test');
     }
 }

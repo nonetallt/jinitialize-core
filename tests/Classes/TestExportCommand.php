@@ -8,7 +8,7 @@ class TestExportCommand extends JinitializeCommand
 {
     protected function configure()
     {
-        $this->setName('variables:export');
+        $this->setName('test:export');
         $this->setDescription('Export variables test');
     }
 
