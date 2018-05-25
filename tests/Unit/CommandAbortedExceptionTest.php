@@ -8,8 +8,8 @@ use Symfony\Component\Console\Command\Command;
 use Tests\Traits\CleansOutput;
 
 use Nonetallt\Jinitialize\Procedure;
-use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
-use Nonetallt\Jinitialize\Plugin\Exceptions\CommandAbortedException;
+use Nonetallt\Jinitialize\JinitializeCommand;
+use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
 
 class CommandAbortedExceptionTest extends TestCase
 {
@@ -26,14 +26,14 @@ class CommandAbortedExceptionTest extends TestCase
 
     public function testCausedByProcedure()
     {
-        /* $this->exception->setCommand(new Procedure('name', 'description', [])); */
-        /* $this->assertTrue($this->exception->causedByProcedure()); */
+        $this->exception->setCommand(new Procedure('name', 'description', []));
+        $this->assertTrue($this->exception->causedByProcedure());
     }
 
     public function testCausedByCommand()
     {
-        $this->exception->setCommand($this->getMockCommand(1));
-        $this->assertTrue($this->exception->causedByCommand());
+        /* $this->exception->setCommand($this->getMockCommand(1)); */
+        /* $this->assertTrue($this->exception->causedByCommand()); */
     }
 
     

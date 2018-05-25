@@ -1,13 +1,14 @@
 <?php
 
-namespace Nonetallt\Jinitialize\Plugin;
+namespace Nonetallt\Jinitialize;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
 
-use Nonetallt\Jinitialize\Plugin\Exceptions\CommandAbortedException;
+use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
+use Nonetallt\Jinitialize\Helpers\ShellUser;
 
 abstract class JinitializeCommand extends Command
 {
@@ -27,7 +28,7 @@ abstract class JinitializeCommand extends Command
         $style = new SymfonyStyle($input, $output);
         
         $style->title('Initializing ' . $this->getName());
-        $this->handle($input, $ouput, $style);
+        $this->handle($input, $output, $style);
 
         $style->success("{$this->getName()} initialized successfully");
     }

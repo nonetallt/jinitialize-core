@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use PHPunit\Framework\TestCase;
 use Nonetallt\Jinitialize\Helpers\Strings;
-use Nonetallt\Jinitialize\Plugin\PluginContainer;
+use Nonetallt\Jinitialize\PluginContainer;
 
 class StringsTest extends TestCase
 {

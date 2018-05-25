@@ -11,7 +11,7 @@ class RoboFile extends \Robo\Tasks
     public function watchTests()
     {
         $this->taskWatch()
-            ->monitor(['src', 'tests/Feature', 'tests/Unit', 'stubs'], function() {
+            ->monitor(['src', 'tests/Feature', 'tests/Unit', 'tests/Classes', 'stubs'], function() {
                 echo 'test';
                 $this->taskExec('phpunit')->run();
             })->run();

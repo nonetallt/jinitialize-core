@@ -1,9 +1,9 @@
 <?php
 
-namespace Nonetallt\Jinitialize\Plugin\Exceptions;
+namespace Nonetallt\Jinitialize\Exceptions;
 
 use Symfony\Component\Console\Command\Command;
-use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
+use Nonetallt\Jinitialize\JinitializeCommand;
 use Nonetallt\Jinitialize\Procedure;
 
 class CommandAbortedException extends \Exception

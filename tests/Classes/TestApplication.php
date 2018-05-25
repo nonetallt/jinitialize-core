@@ -6,7 +6,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Nonetallt\Jinitialize\Plugin\Plugin;
 use Nonetallt\Jinitialize\JinitializeApplication;
 use Nonetallt\Jinitialize\Procedure;
-use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
+use Nonetallt\Jinitialize\JinitializeCommand;
 
 class TestApplication extends JinitializeApplication
 {
@@ -37,7 +37,7 @@ class TestApplication extends JinitializeApplication
                 $this->setName($this->name);
             }
 
-            protected function handle() 
+            protected function handle($input, $ouput, $style) 
             {
                 ($this->handle)($this);
             }

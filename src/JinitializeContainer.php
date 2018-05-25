@@ -1,8 +1,8 @@
 <?php
 
-namespace Nonetallt\Jinitialize\Plugin;
+namespace Nonetallt\Jinitialize;
 
-use Nonetallt\Jinitialize\Plugin\Plugin;
+use Nonetallt\Jinitialize\Plugin;
 
 class JinitializeContainer
 {

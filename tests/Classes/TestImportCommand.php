@@ -2,7 +2,7 @@
 
 namespace Tests\Classes;
 
-use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
+use Nonetallt\Jinitialize\JinitializeCommand;
 
 class TestImportCommand extends JinitializeCommand
 {
@@ -12,7 +12,7 @@ class TestImportCommand extends JinitializeCommand
         $this->setDescription('Import variables test');
     }
 
-    protected function handle()
+    protected function handle($input, $output, $style)
     {
         $v1 = $this->import('testPlugin', 'variable1');
         $v2 = $this->import('testPlugin', 'variable2');

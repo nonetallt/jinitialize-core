@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use PHPunit\Framework\TestCase;
-use Nonetallt\Jinitialize\Plugin\ShellUser;
+use Nonetallt\Jinitialize\Helpers\ShellUser;
 
 class ShellUserTest extends TestCase
 {

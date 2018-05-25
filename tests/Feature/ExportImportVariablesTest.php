@@ -10,8 +10,8 @@ use Tests\Classes\TestApplication;
 
 use Tests\Classes\TestExportCommand;
 use Nonetallt\Jinitialize\Procedure;
-use Nonetallt\Jinitialize\Plugin\JinitializeContainer;
-use Nonetallt\Jinitialize\Plugin\Plugin;
+use Nonetallt\Jinitialize\JinitializeContainer;
+use Nonetallt\Jinitialize\Plugin;
 use Tests\Classes\TestImportCommand;
 
 class ExportImportVariablesTest extends TestCase

@@ -28,7 +28,7 @@
   from)
 
 
-#MODULES
+# Planned modules
 
 * new laravel project installer
 * apache2 local
@@ -49,7 +49,7 @@
 * react boilerplate setup
 
 
-#TOOLS
+# Tools
 * site status checker with guzzle
 * .env editor
 

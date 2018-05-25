@@ -2,7 +2,7 @@
 
 namespace Tests\Classes;
 
-use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
+use Nonetallt\Jinitialize\JinitializeCommand;
 
 class TestExportCommand extends JinitializeCommand
 {
@@ -12,7 +12,7 @@ class TestExportCommand extends JinitializeCommand
         $this->setDescription('Export variables test');
     }
 
-    protected function handle()
+    protected function handle($input, $output, $style)
     {
         $this->export('variable1', 1);
         $this->export('variable2', 2);

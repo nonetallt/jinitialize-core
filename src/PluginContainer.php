@@ -1,6 +1,6 @@
 <?php
 
-namespace Nonetallt\Jinitialize\Plugin;
+namespace Nonetallt\Jinitialize;
 
 use Nonetallt\Jinitialize\Helpers\Strings;
 

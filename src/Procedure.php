@@ -9,13 +9,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 
 use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
-use Nonetallt\Jinitialize\Plugin\ShellUser;
+use Nonetallt\Jinitialize\Helpers\ShellUser;
 
 class Procedure extends Command
 {
     private $commands;
     private $commandsExecuted;
-    private $user;
     private $name;
     private $description;
     private $io;
@@ -30,8 +29,6 @@ class Procedure extends Command
 
         $this->commands = $commands;
         $this->commandsExecuted = [];
-
-        $this->user = ShellUser::getInstance();
     }
 
     /**
@@ -143,9 +140,9 @@ class Procedure extends Command
             /* Skip evalutating commands that do not recommend root */
             if(! method_exists($command, 'recommendsRoot')) continue;
 
-            if($command->recommendsRoot() && ! $this->user->isRoot()) {
+            if($command->recommendsRoot() && ! ShellUser::getInstance()->isRoot()) {
                 $name = $command->getName();
-                $user = $this->user->getName();
+                $user = ShellUser::getInstance()->getName();
                 $warnings[] = "Command $name recommends running as root, currently $user.";
             }
         }
