@@ -34,5 +34,10 @@
         "post-autoload-dump": [
             "Nonetallt\\Jinitialize\\ComposerScripts::postAutoloadDump"
         ]
+    },
+    "extra": {
+        "jinitialize-plugin": {
+            "name": "example"
+        }
     }
 }

@@ -27,6 +27,7 @@
 * testing documentation
 * recommend documentation on imported and exported variables
 * update jinitialize command documenation (plugin-new)
+* require jinitialize-core
 
 
 ## jinitialize-plugin-project
