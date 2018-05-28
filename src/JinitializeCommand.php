@@ -6,6 +6,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\StringInput;
 
 use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
 use Nonetallt\Jinitialize\Helpers\ShellUser;
@@ -14,13 +15,14 @@ abstract class JinitializeCommand extends Command
 {
     private $user;
     private $plugin;
-    
+    private $input;
 
     public function __construct(string $plugin)
     {
         parent::__construct();
         $this->user = ShellUser::getInstance();
         $this->plugin = $plugin;
+        $this->input = new StringInput('');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -73,6 +75,16 @@ abstract class JinitializeCommand extends Command
     private function getContainer()
     {
         return JinitializeContainer::getInstance()->getPlugin($this->getPluginName())->getContainer();
+    }
+
+    public function getInput()
+    {
+        return $this->input;
+    }
+
+    public function setInput(InputInterface $input)
+    {
+        $this->input = $input;
     }
 
     protected abstract function handle($input, $output, $style);

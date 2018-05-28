@@ -31,7 +31,7 @@ class ExportImportVariablesTest extends TestCase
         $this->runCommand(TestExportCommand::class);
         $this->runCommand(TestImportCommand::class);
 
-        /* $this->assertContainerEquals(['variable1' => 1, 'variable2' => 2, 'variable3' => '12'], 'test'); */
+        $this->assertContainerEquals(['variable1' => 1, 'variable2' => 2, 'variable3' => '12'], 'test');
         $this->assertContainerContains(['variable3' => '12'], 'test');
     }
 }

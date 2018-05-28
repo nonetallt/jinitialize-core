@@ -61,7 +61,7 @@ class Strings
         /* Remove last part from the array */
         array_pop($parts);
 
-        return implode('/', $parts);
+        return implode($last, $parts);
     }
 
     /* str_replace_first */

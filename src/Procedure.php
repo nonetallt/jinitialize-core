@@ -6,10 +6,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
-
-use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
-use Nonetallt\Jinitialize\Helpers\ShellUser;
 
 class Procedure extends Command
 {
@@ -27,9 +23,10 @@ class Procedure extends Command
 
         parent::__construct();
 
-        $this->commands = $commands;
+        $this->setCommands($commands);
         $this->commandsExecuted = [];
     }
+    
 
     /**
      * Implemented from Command
@@ -58,7 +55,7 @@ class Procedure extends Command
             $this->commandsExecuted[] = $command;
 
             try {
-                $command->run(new ArrayInput([]), $output);
+                $command->run($command->getInput(), $output);
             }
             catch(CommandAbortedException $e) {
 
@@ -153,5 +150,17 @@ class Procedure extends Command
         }
 
         return $abort;
+    }
+
+    private function setCommands(array $commands)
+    {
+        $class = JinitializeCommand::class;
+        
+        foreach($commands as $command) {
+            if(! is_subclass_of($command, $class)) {
+                throw new \Exception("Commands given to a procedure class should be subclasses of $class");
+            } 
+        }
+        $this->commands = $commands;
     }
 }

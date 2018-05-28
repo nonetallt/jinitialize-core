@@ -19,6 +19,7 @@ class TestCase extends Test
         parent::__construct();
 
         $this->app = new JinitializeApplication();
+        $this->app->registerApplicationCommands();
         $this->registerLocalPlugin();
     }
 
@@ -45,19 +46,7 @@ class TestCase extends Test
         }
     }
 
-    /**
-     * Execute a registered command using the command signature
-     * 
-     * @param string $commandName
-     * @return CommandTester $tester
-     *
-     */
-    protected function executeCommand(string $commandName)
-    {
-        $command = $this->app->find($commandName);
-        return $this->testComamnd($command);
-    }
-
+    
     /**
      * Execute a command using the classname
      * 
@@ -68,7 +57,8 @@ class TestCase extends Test
     protected function runCommand(string $class)
     {
         if(! is_subclass_of($class, JinitializeCommand::class)) {
-            throw new \Exception("Class $class given to runCommand should be a subclass of JinitializeCommand");
+            return $this->executeCommand($class);
+            /* throw new \Exception("Class $class given to runCommand should be a subclass of JinitializeCommand"); */
         }
 
         $container = JinitializeContainer::getInstance();
@@ -89,12 +79,18 @@ class TestCase extends Test
 
         
         $command = new $class('test');
-        return $this->testCommand($command);
+        return $this->executeCommand($command);
     }
 
-    private function testCommand($command)
+    private function executeCommand($command)
     {
-        $command = $this->app->find($command->getName());
+        $name = $command;
+
+        if(! is_string($command)) {
+            $name = $command->getName();
+        }
+
+        $command = $this->app->find($name);
         $tester = new CommandTester($command);
         $tester->execute(['command' => $command->getName()]);
 
@@ -113,6 +109,11 @@ class TestCase extends Test
         $constraint = new ContainerContains();
         $constraint->plugin = $plugin;
         self::assertThat($value, $constraint, $message);
+    }
+
+    protected function getApplication()
+    {
+        return $this->app;
     }
 
     public function tearDown()

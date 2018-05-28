@@ -1,0 +1,10 @@
+{
+    "test-procedure": {
+        "description": "This is a test procedure",
+        "commands": { 
+            "core": [
+                "create:plugin"
+            ]
+        }
+    }
+}

@@ -10,6 +10,11 @@ trait Paths
         return dirname(dirname(__DIR__));
     }
 
+    private function stubsFolder()
+    {
+        return $this->projectRoot() . '/stubs';
+    }
+
     private function outputFolder()
     {
         return __DIR__ . '/../output';

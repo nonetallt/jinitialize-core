@@ -17,7 +17,7 @@ class JinitializeApplication extends Application
 {
     public function __construct(string $dotenvDir = null)
     {
-        parent::__construct();
+        parent::__construct('jinitialize', '1.0.0');
 
         if(! is_null($dotenvDir)) {
             /* Load .env when application is created */

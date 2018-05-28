@@ -2,7 +2,7 @@
 
 namespace Nonetallt\Jinitialize\Commands;
 
-use Nonetallt\Jinitialize\Plugin\JinitializeCommand as Command;
+use Nonetallt\Jinitialize\JinitializeCommand as Command;
 
 class CreatePlugin extends Command
 {
@@ -12,7 +12,7 @@ class CreatePlugin extends Command
         $this->setName('create:plugin')->setDescription('Create a new jinitialize plugin project');
     }
 
-    protected function handle()
+    protected function handle($input, $output, $style)
     {
         $io = $this->getIo();
 
