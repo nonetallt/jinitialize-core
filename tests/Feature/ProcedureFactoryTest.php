@@ -26,7 +26,7 @@ class ProcedureFactoryTest extends TestCase
             $commands[] = $command->getName();
         }
 
-        $this->assertEquals(['create:plugin'], $commands);
+        $this->assertEquals(['core:create-plugin'], $commands);
     }
 
     public function testCommandsHaveArguments()

@@ -9,7 +9,7 @@ class CreatePlugin extends Command
 
     protected function configure()
     {
-        $this->setName('create:plugin')->setDescription('Create a new jinitialize plugin project');
+        $this->setName('create-plugin')->setDescription('Create a new jinitialize plugin project');
     }
 
     protected function handle($input, $output, $style)

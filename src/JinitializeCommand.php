@@ -67,7 +67,7 @@ abstract class JinitializeCommand extends Command
         return $this->user;
     }
 
-    protected function getPluginName()
+    public function getPluginName()
     {
         return $this->plugin;
     }

@@ -25,6 +25,39 @@ class CommandFactory
         $command = $this->app->find($name);
         $command->setInput(new StringInput($arguments));
 
+        return $this->setNamespace($command);
+    }
+
+    /**
+     * Make sure that the namespace before command matches that of the plugin
+     * of the command.
+     *
+     * namespace:command
+     *
+     * @param JinitializeCommand $command
+     * @return JinitializeCommand $command
+     *
+     */
+    private function setNamespace(JinitializeCommand $command)
+    {
+        /* Check that the given name is in the plugin's namespace */
+        $name = $command->getName();
+        $plugin = $command->getPluginName();
+
+        $parts = explode(':', $name, 2);
+
+        if(count($parts) === 1) {
+            /* Append namespace if missing */
+            $name = "$plugin:{$parts[0]}";
+        }
+        else {
+            /* Check that namespace is correct */
+            if($parts[0] !== $plugin) {
+                $name = $plugin .':'. $parts[1];
+            }
+        }
+
+        $command->setName($name);
         return $command;
     }
 }
