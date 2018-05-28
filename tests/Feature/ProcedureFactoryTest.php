@@ -6,6 +6,8 @@ use Nonetallt\Jinitialize\Testing\TestCase;
 use Tests\Traits\Paths;
 use Nonetallt\Jinitialize\ProcedureFactory;
 use Nonetallt\Jinitialize\Procedure;
+use Nonetallt\Jinitialize\Exceptions\CommandNotFoundException;
+use Nonetallt\Jinitialize\Exceptions\PluginNotFoundException;
 
 class ProcedureFactoryTest extends TestCase
 {
@@ -36,12 +38,40 @@ class ProcedureFactoryTest extends TestCase
         $this->assertEquals('test', $input->getFirstArgument());
     }
 
+    public function testNonexistentCommand()
+    {
+        $this->expectException(CommandNotFoundException::class);
+        $procedure = $this->createProcedure('test-missing-command');
+    }
+
+    public function testNonexistentPlugin()
+    {
+        $this->expectException(PluginNotFoundException::class);
+        $procedure = $this->createProcedure('test-missing-plugin');
+    }
+
+    public function testGetNames()
+    {
+        $factory = $this->createFactory();
+        $names = ['test-procedure', 'test-missing-command', 'test-missing-plugin'];
+        $this->assertEquals($names, $factory->getNames());
+    }
+
+    private function createFactory()
+    {
+        $file = $this->stubsFolder() . '/procedure.json';
+        return new ProcedureFactory($this->getApplication(), [$file]);
+    }
+
+    private function createProcedure(string $procedure)
+    {
+        $factory = $this->createFactory();
+        return $factory->create($procedure);
+    }
+
     public function setUp()
     {
         parent::setUp();
-
-        $file = $this->stubsFolder() . '/procedure.json';
-        $factory = new ProcedureFactory($this->getApplication(), [$file]);
-        $this->procedure = $factory->create('test-procedure');
+        $this->procedure = $this->createProcedure('test-procedure');
     }
 }

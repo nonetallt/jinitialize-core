@@ -17,13 +17,19 @@ class ComposerScripts
             $packages = json_decode(file_get_contents($path), true);
         }
 
-        self::generatePluginsManifest($packages, __DIR__ . '/../bootstrap/cache/plugins.php');    
+        /* The path where the plugin manifest will be created */
+        $output = __DIR__ . '/../bootstrap/cache/plugins.php';
+
+        /* The directory where the plugin will be installed */
+        $dir = $vendorDir .'/'. $package['name'];
+
+        self::generatePluginsManifest($packages, $output, $dir);    
     }
 
     /**
      * Separate mehtod for testing puroposes
      */
-    public static function generatePluginsManifest(array $packages, string $outputPath)
+    public static function generatePluginsManifest(array $packages, string $outputPath, string $path = null)
     {
         $plugins = [];
 
@@ -32,6 +38,10 @@ class ComposerScripts
             /* Skip packages that do not define plugin in extra */
             if(empty($package['extra']['jinitialize-plugin'])) continue;
 
+            /* Append plugin directory to info */
+            if(! is_null($path)) {
+                $package['extra']['jinitialize-plugin']['path'] = $path;
+            }
 
             $pluginInfo = $package['extra']['jinitialize-plugin'];
             $plugins[] = $pluginInfo;

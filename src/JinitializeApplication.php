@@ -28,7 +28,15 @@ class JinitializeApplication extends Application
 
     public function registerApplicationCommands()
     {
-        $this->add(new CreatePlugin('core'));
+        if(! $this->getContainer()->hasPlugin('core')) {
+            $this->getContainer()->addPlugin('core');
+        }
+
+        $command = new CreatePlugin('core');
+
+        if(! $this->has($command->getName())) {
+            $this->add($command);
+        }
     }
 
     /**
@@ -56,14 +64,16 @@ class JinitializeApplication extends Application
         if(! isset($plugin['name'])) return;
 
         /* Create a container for the plugin */
-        JinitializeContainer::getInstance()->addPlugin($plugin['name']);
+        $this->getContainer()->addPlugin($plugin['name']);
 
+        /* Commands are registered first so they can be found be porcedures */
         if(isset($plugin['commands'])) {
             $this->registerCommands($plugin['name'], $plugin['commands']);
         }
 
         if(isset($plugin['procedures'])) {
-            $this->registerProcedures($plugin['name'], $plugin['procedures']);
+            /* The path info is appended by ComposerScripts */
+            $this->registerProcedures($plugin['name'], $plugin['procedures'], $plugin['path']);
         }
 
         if(isset($plugin['settings'])) {
@@ -71,10 +81,25 @@ class JinitializeApplication extends Application
         }
     }
 
-    public function registerProcedures(string $plugin, array $procedures)
+    /**
+     * Register all procedures for a given plugin
+     */
+    public function registerProcedures(string $plugin, array $procedures, string $path)
     {
-        /* TODO */
-        /* procedure factory */
+        /* Append the installation path before the files */
+        array_walk($procedures, function(&$procedure) use ($path){
+            $procedure = "$path/$procedure";
+        });
+
+        /* Create a factory from list of paths defined by plugin */
+        $factory = new ProcedureFactory($this, $procedures);
+
+        /* Get a list of all procedure names contained in file paths */ 
+        foreach($factory->getNames() as $name) {
+            /* Use the factory to create and register each procedure */
+            $procedure = $factory->create($name);
+            $this->add($procedure);
+        }
     }
 
     /**
@@ -84,7 +109,13 @@ class JinitializeApplication extends Application
     {
         foreach($commands as $commandClass) {
             $command = new $commandClass($plugin);
+            $command = CommandFactory::setNamespace($command);
             $this->add($command);
         }
+    }
+
+    public function getContainer()
+    {
+        return JinitializeContainer::getInstance();
     }
 }

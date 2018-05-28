@@ -3,6 +3,7 @@
 namespace Nonetallt\Jinitialize;
 
 use Nonetallt\Jinitialize\Helpers\Strings;
+use Nonetallt\Jinitialize\Exceptions\PluginNotFoundException;
 
 class ProcedureFactory
 {
@@ -27,8 +28,9 @@ class ProcedureFactory
             throw new \Exception("Procedure '$procedure' was not found");
         }
 
+        /* Return the named procedure in case file contains multiples */
         foreach($json as $name => $data) {
-            if($name === $procedure) return $this->fromArray($name, $data);
+            if($name === $procedure) return $this->procedureFromArray($name, $data);
         }
     }
 
@@ -36,7 +38,7 @@ class ProcedureFactory
      * Note: the given json might contain multiple procedures defined in 1 file
      *
      */
-    public function fromArray(string $name, array $json)
+    public function procedureFromArray(string $name, array $json)
     {
         $description = 'No description found';
         $parsedCommands = [];
@@ -46,17 +48,35 @@ class ProcedureFactory
         }
 
         if(isset($json['commands'])) {
-
-            $factory = new CommandFactory($this->app);
-
-            foreach($json['commands'] as $commands) {
-                foreach($commands as $plugin => $commandString) {
-                    $parsedCommands[] = $factory->create($commandString);
-                }
-            }
+            $parsedCommands = $this->parseCommands($json['commands'], $name);
         }
 
         return new Procedure($name, $description, $parsedCommands);
+    }
+
+    /**
+     * Create command classes from a json array
+     */
+    private function parseCommands(array $json, string $procedureName)
+    {
+        $factory = new CommandFactory($this->app);
+        $errors = [];
+
+        foreach($json as $plugin => $commands) {
+            foreach($commands as $commandString) {
+                /* Check that the given plugin is installed */
+                if(! $this->app->getContainer()->hasPlugin($plugin)) {
+                    $errors[] = "Plugin '$plugin' is required to run procedure '$procedureName'.";
+                    continue;
+                }
+                $parsedCommands[] = $factory->create($plugin, $commandString);
+            }
+        }
+
+        if(! empty($errors)) {
+            throw new PluginNotFoundException(implode(PHP_EOL, $errors));
+        }
+        return $parsedCommands;
     }
 
     /**
@@ -127,5 +147,29 @@ class ProcedureFactory
     private function hasProcedure(array $content, string $procedure)
     {
         return in_array($procedure, array_keys($content));
+    }
+
+    /**
+     * Get a list of all procedure names contained in the factory's filepaths
+     * @return array $procedureNames array of procedure names
+     *
+     */
+    public function getNames()
+    {
+        $procedureNames = [];
+
+        /* Parse all unparsed paths */
+        foreach($this->unparsedPaths() as $path) {
+            $json = $this->parsePath($path);
+        }
+
+        /* Get all parsed names */
+        foreach($this->parsed as $path => $procedures) {
+            foreach($procedures as $name => $procedure) {
+                $procedureNames[] = $name;
+            }
+        }
+
+        return $procedureNames;
     }
 }

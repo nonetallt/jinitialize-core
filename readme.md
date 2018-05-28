@@ -7,19 +7,18 @@
 * packagist setup
 * every command should be wrapped in a procedure
 * register procedures
+* when plugin is not found, use composer search to suggest packages to install
 
 
 ## jinitialize-core
+
+* exported procedures
+* exported settings
 
 * make sure optional methods are public
 * composerScripts: print suggested settings list
 * procedure: print suggested settings list?
 * use values from other modules when possible (display which module value comes from)
-* exported settings
-* exported procedures
-
-* procedure factory
-    * when plugin is not found, use composer search to suggest packages to install
 
 
 ## jinitialize-plugin
@@ -30,6 +29,7 @@
 * recommend documentation on imported and exported variables
 * update jinitialize command documenation (plugin-new)
 * require jinitialize-core
+* autogenerate procedures command?
 
 
 ## jinitialize-plugin-project

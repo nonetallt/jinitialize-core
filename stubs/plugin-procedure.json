@@ -1,0 +1,10 @@
+{
+    "test-procedure": {
+        "commands": { 
+            "TestPlugin": [
+                "import",
+                "export"
+            ]
+        }
+    }
+}

@@ -37,7 +37,10 @@
     },
     "extra": {
         "jinitialize-plugin": {
-            "name": "example"
+            "name": "core",
+            "commands": [
+                "Nonetallt\\Jinitialize\\Commands\\CreatePlugin"
+            ]
         }
     }
 }

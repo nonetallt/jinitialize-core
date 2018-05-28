@@ -3,6 +3,8 @@
 namespace Nonetallt\Jinitialize;
 
 use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Exception\CommandNotFoundException as ConsoleException;
+use Nonetallt\Jinitialize\Exceptions\CommandNotFoundException;
 
 class CommandFactory
 {
@@ -13,7 +15,7 @@ class CommandFactory
         $this->app = $app;
     }
 
-    public function create(string $name)
+    public function create(string $plugin, string $name)
     {
         /* echo text, where echo is the name of the command and the string
            after represents the arguments */
@@ -22,10 +24,16 @@ class CommandFactory
         $name      = $parts[0];
         $arguments = $parts[1] ?? '';
 
-        $command = $this->app->find($name);
-        $command->setInput(new StringInput($arguments));
+        $name = self::commandSignatureFor($plugin, $name);
 
-        return $this->setNamespace($command);
+        try{
+            $command = $this->app->find($name);
+            $command->setInput(new StringInput($arguments));
+            return $command;
+        }
+        catch(ConsoleException $e) {
+            throw new CommandNotFoundException("Command $name was not found");
+        }
     }
 
     /**
@@ -38,26 +46,30 @@ class CommandFactory
      * @return JinitializeCommand $command
      *
      */
-    private function setNamespace(JinitializeCommand $command)
+    public static function setNamespace(JinitializeCommand $command)
     {
         /* Check that the given name is in the plugin's namespace */
         $name = $command->getName();
         $plugin = $command->getPluginName();
 
-        $parts = explode(':', $name, 2);
+        $command->setName(self::commandSignatureFor($plugin, $name));
+        return $command;
+    }
+
+    public static function commandSignatureFor(string $plugin, string $command)
+    {
+        $parts = explode(':', $command, 2);
 
         if(count($parts) === 1) {
             /* Append namespace if missing */
-            $name = "$plugin:{$parts[0]}";
+            $command = "$plugin:{$parts[0]}";
         }
         else {
             /* Check that namespace is correct */
             if($parts[0] !== $plugin) {
-                $name = $plugin .':'. $parts[1];
+                $command = $plugin .':'. $parts[1];
             }
         }
-
-        $command->setName($name);
         return $command;
     }
 }

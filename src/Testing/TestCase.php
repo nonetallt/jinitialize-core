@@ -14,15 +14,6 @@ class TestCase extends Test
 {
     private $app;
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->app = new JinitializeApplication();
-        $this->app->registerApplicationCommands();
-        $this->registerLocalPlugin();
-    }
-
     /* Register this plugin for testing purposes in plugins */
     private function registerLocalPlugin()
     {
@@ -45,7 +36,6 @@ class TestCase extends Test
             }
         }
     }
-
     
     /**
      * Execute a command using the classname
@@ -116,7 +106,13 @@ class TestCase extends Test
         return $this->app;
     }
 
-    public function tearDown()
+    protected function setUp()
+    {
+        $this->app = new JinitializeApplication();
+        $this->registerLocalPlugin();
+    }
+
+    protected function tearDown()
     {
         /* Clear all values from the singleton container */
         JinitializeContainer::resetInstance();
