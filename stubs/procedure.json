@@ -3,7 +3,7 @@
         "description": "This is a test procedure",
         "commands": { 
             "core": [
-                "create:plugin"
+                "create:plugin test"
             ]
         }
     }

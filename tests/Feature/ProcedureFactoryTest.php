@@ -23,12 +23,17 @@ class ProcedureFactoryTest extends TestCase
         $commands = [];
 
         foreach($this->procedure->getCommands() as $command) {
-            if(is_string($command)) continue;
             $commands[] = $command->getName();
-            var_dump($command->getName());
         }
 
         $this->assertEquals(['create:plugin'], $commands);
+    }
+
+    public function testCommandsHaveArguments()
+    {
+        $commands = $this->procedure->getCommands();
+        $input = $commands[0]->getInput();
+        $this->assertEquals('test', $input->getFirstArgument());
     }
 
     public function setUp()
