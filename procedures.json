@@ -50,34 +50,22 @@
     },
     "php-package": {
         "description": "Create a new generic php package.",
-        "commands": {
-            "project": [
-                "create",
-                "folder src",
-                "folder tests",
-                "folder tests/Unit",
-                "folder tests/Feature",
-                "folder tests/Traits",
-                "folder tests/output",
-                "copy phpunit.xml",
-                "copy-stub composer.stub"
-            ],
-            "phpunit": [ 
-                
-            ],
-            "composer": [
-
-            ],
-            "git": [
-                "init",
-                "create-upstream-github",
-                "ignore tags",
-                "ignore vendor",
-                "ignore tests/output"
-            ],
-            "shell": [
-                "ctags -R --fields=+laimS --languages=php --exclude=.git"
-            ]
-        }
+        "commands": [ 
+            "project:create",
+            "project:folder src",
+            "project:folder tests",
+            "project:folder tests/Unit",
+            "project:folder tests/Feature",
+            "project:folder tests/Traits",
+            "project:folder tests/output",
+            "project:copy phpunit.xml",
+            "project:copy-stub composer.stub",
+            "git:init",
+            "git:create-upstream-github",
+            "git:ignore tags",
+            "git:ignore vendor",
+            "git:ignore tests/output",
+            "shell:\"ctags -R --fields=+laimS --languages=php --exclude=.git\""
+        ]
     }
 }

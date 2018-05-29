@@ -7,23 +7,27 @@
 * git setup
 * packagist setup
 * every command should be wrapped in a procedure
-* register procedures
+* register procedures from the local folder
 * when plugin is not found, use composer search to suggest packages to install
 
 
 ## jinitialize-core
 
 * recommendsRunning
+* json naming issues with multiple named instances of same plugin in one script
+* print suggested settings list
+    * on composerScripts
+    * on application start
+    * .env interactive editor
 
 * make sure optional methods are public
-* composerScripts: print suggested settings list
-* procedure: print suggested settings list?
-* use values from other modules when possible (display which module value comes from)
+* use values from other modules when possible ()
 
 
 ## jinitialize-plugin
 
-* recommend documentation on imported and exported variables
+* DOC: recommend documentation on imported and exported variables
+* DOC: recommend display which module value comes from when using imported values
 * autogenerate procedures command?
 
 

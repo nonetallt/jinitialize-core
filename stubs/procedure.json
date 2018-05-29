@@ -1,26 +1,20 @@
 {
     "test-procedure": {
         "description": "This is a test procedure",
-        "commands": { 
-            "core": [
-                "create-plugin test"
-            ]
-        }
+        "commands": [ 
+            "core:create-plugin test"
+        ]
     },
     "test-missing-command": {
         "description": "This is a test procedure with missing command",
-        "commands": {
-            "core": [
-                "nonexistent-command"
-            ]
-        }
+        "commands": [
+            "core:nonexistent-command"
+        ]
     },
     "test-missing-plugin": {
         "description": "This is a test procedure with missing plugin",
-        "commands": {
-            "missing-plugin": [
-                "nonexistent-command"
-            ]
-        }
+        "commands": [
+            "missing-plugin:nonexistent-command"
+        ]
     }
 }

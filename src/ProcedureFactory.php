@@ -62,15 +62,17 @@ class ProcedureFactory
         $factory = new CommandFactory($this->app);
         $errors = [];
 
-        foreach($json as $plugin => $commands) {
-            foreach($commands as $commandString) {
-                /* Check that the given plugin is installed */
-                if(! $this->app->getContainer()->hasPlugin($plugin)) {
-                    $errors[] = "Plugin '$plugin' is required to run procedure '$procedureName'.";
-                    continue;
-                }
-                $parsedCommands[] = $factory->create($plugin, $commandString);
+        foreach($json as $commandString) {
+
+            /* Get the namespace of the command */
+            $plugin = explode(':', $commandString, 2)[0];
+
+            /* Check that the given plugin is installed */
+            if(! $this->app->getContainer()->hasPlugin($plugin)) {
+                $errors[] = "Plugin '$plugin' is required to run procedure '$procedureName'.";
+                continue;
             }
+            $parsedCommands[] = $factory->create($plugin, $commandString);
         }
 
         if(! empty($errors)) {
@@ -139,6 +141,11 @@ class ProcedureFactory
             throw new \Exception("Can't read path $path, not a file");
         }
         $json = json_decode(file_get_contents($path), true);
+
+        if(is_null($json)) {
+            throw new \Exception("Procedure json at path $path could not be parsed");
+        }
+
         $this->parsed[$path] = $json;
 
         return $json;
