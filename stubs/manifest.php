@@ -8,6 +8,9 @@
         ],
         'procedures' => [
             'stubs/plugin-procedure.json'
+        ],
+        'settings' => [
+            'setting'
         ]
     ]
 ];

@@ -77,7 +77,7 @@ class JinitializeApplication extends Application
         }
 
         if(isset($plugin['settings'])) {
-            /* TODO */
+            $this->registerSettings($plugin['name'], $plugin[ 'settings' ]);
         }
     }
 
@@ -112,6 +112,11 @@ class JinitializeApplication extends Application
             $command = CommandFactory::setNamespace($command);
             $this->add($command);
         }
+    }
+
+    public function registerSettings(string $plugin, array $settings)
+    {
+        $this->getContainer()->getPlugin($plugin)->setSettings($settings);
     }
 
     public function getContainer()

@@ -2,6 +2,7 @@
 
 ## jinitialize
 
+* move jinitialize file from core
 * project structure
 * git setup
 * packagist setup
@@ -12,8 +13,8 @@
 
 ## jinitialize-core
 
-* exported procedures
 * exported settings
+* recommendsRunning
 
 * make sure optional methods are public
 * composerScripts: print suggested settings list
@@ -23,30 +24,23 @@
 
 ## jinitialize-plugin
 
-* git rename
-* packagist rename (composer.json ?)
-* testing documentation
 * recommend documentation on imported and exported variables
-* update jinitialize command documenation (plugin-new)
-* require jinitialize-core
 * autogenerate procedures command?
 
 
 ## jinitialize-plugin-project
 
-* refactor composer.json
+* refactor composer.json (namespace?)
 * project structure package (from create plugin structure)
 * stub wrapper convert 'plugin name' to [PLUGIN_NAME]
 
 
-## jinitialize-plugin-mysql
 
-* refactor from main project
-* check if database already exists before trying to create it
-* check if user exists
-* set db default collation
-* set db default driver innoDB
 
+NEEDED FOR php project
+* project
+* git
+* shell
 
 
 
@@ -83,3 +77,13 @@
 * preferred psr
 * preferred stability
 * preferred license
+
+
+## jinitialize-plugin-mysql
+
+* refactor from main project
+* check if database already exists before trying to create it
+* check if user exists
+* set db default collation
+* set db default driver innoDB
+

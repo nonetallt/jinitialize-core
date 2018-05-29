@@ -36,6 +36,12 @@ class RegisterPluginTest extends TestCase
         $this->assertCount(2, $commands);
     }
 
+    public function testSettingsAreRegistered()
+    {
+        $settings = $this->app->getContainer()->getPlugin('TestPlugin')->getSettings();
+        $this->assertEquals(['setting'], $settings);
+    }
+
     public function setUp()
     {
         $manifestPath = $this->stubsFolder() . '/manifest.php';
