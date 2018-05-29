@@ -13,7 +13,6 @@
 
 ## jinitialize-core
 
-* exported settings
 * recommendsRunning
 
 * make sure optional methods are public

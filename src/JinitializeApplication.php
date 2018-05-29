@@ -123,4 +123,31 @@ class JinitializeApplication extends Application
     {
         return JinitializeContainer::getInstance();
     }
+
+    public function recommendedSettings()
+    {
+        $settings = [];
+        foreach($this->getContainer()->getPlugins() as $plugin) {
+            $settings[$plugin->getName()] = $plugin->getSettings();
+        }
+        return $settings;
+    }
+
+    /**
+     * Get an array of plugins and their settings that are not defined in env
+     *
+     */
+    public function missingSettings()
+    {
+        $missing = [];
+        foreach($this->recommendedSettings() as $plugin => $settings) {
+            foreach($settings as $setting) {
+                /* Get value for the setting */
+                $value = $_ENV[$setting] ?? null;
+
+                if(is_null($value)) $missing[$plugin][] = $setting;
+            }
+        }
+        return $missing;
+    }
 }

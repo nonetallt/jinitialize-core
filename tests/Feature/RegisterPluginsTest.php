@@ -42,6 +42,25 @@ class RegisterPluginTest extends TestCase
         $this->assertEquals(['setting'], $settings);
     }
 
+    public function testRecommendedSettings()
+    {
+        $settings = $this->app->recommendedSettings();
+        $this->assertEquals(['TestPlugin' => ['setting']], $settings);
+    }
+
+    public function testSettingMissing()
+    {
+        $settings = $this->app->missingSettings();
+        $this->assertEquals(['TestPlugin' => ['setting']], $settings);
+    }
+
+    public function testSettingExists()
+    {
+        $_ENV['setting'] = 'value';
+        $settings = $this->app->missingSettings();
+        $this->assertEmpty($settings);
+    }
+
     public function setUp()
     {
         $manifestPath = $this->stubsFolder() . '/manifest.php';
