@@ -8,24 +8,24 @@
 * packagist setup
 * every command should be wrapped in a procedure
 * register procedures from the local folder
-* when plugin is not found, use composer search to suggest packages to install
 
 
 ## jinitialize-core
 
-* recommendsRunning
-* json naming issues with multiple named instances of same plugin in one script
+* recommendsExecuting
 * print suggested settings list
     * on composerScripts
     * on application start
     * .env interactive editor
 
-* make sure optional methods are public
 * use values from other modules when possible ()
+* procedure
+    * when plugin is not found, use composer search to suggest packages to install
 
 
 ## jinitialize-plugin
 
+* DOC: runProcedure, runCommandAsProcedure
 * DOC: recommend documentation on imported and exported variables
 * DOC: recommend display which module value comes from when using imported values
 * autogenerate procedures command?
@@ -38,7 +38,9 @@
 * stub wrapper convert 'plugin name' to [PLUGIN_NAME]
 
 
-
+Refactor
+* TestCase
+* Procedure
 
 NEEDED FOR php project
 * project

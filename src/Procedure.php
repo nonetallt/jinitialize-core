@@ -6,6 +6,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
+
+use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
 
 class Procedure extends Command
 {
@@ -44,17 +47,24 @@ class Procedure extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /* Make's sure this procedure does not have commands that would require
+         execution of another command that is not executed before.*/ 
+        $this->validate();
+
         $this->io = new SymfonyStyle($input, $output);
         $app = $this->getApplication();
 
-        $abort = $this->checkPermissions($this->io);
-        if($abort) return false;
+        $this->recommend($output);
+
+        /* Check that the whole procedure can be executed by the user */
+        if($this->checkPermissions($this->io)) return false;
+
 
         foreach($this->commands as $command) {
-            $command = $app->find($command->getName());
-            $this->commandsExecuted[] = $command;
 
             try {
+                $command = $app->find($command->getName());
+                $this->commandsExecuted[] = $command;
                 $command->run($command->getInput(), $output);
             }
             catch(CommandAbortedException $e) {
@@ -83,7 +93,7 @@ class Procedure extends Command
         for($n = count($this->commandsExecuted); $n > 0; $n--) {
             $command = $this->commandsExecuted[$n-1];
 
-            if(method_exists($command, 'revert')) {
+            if($command->hasPublicMethod('revert')) {
                 $command->revert();
             }
             else {
@@ -99,7 +109,7 @@ class Procedure extends Command
     public function recommendsRoot()
     {
         foreach($this->commands as $command) {
-            if(method_exists($command, 'recommendsRoot')) {
+            if($command->hasPublicMethod('recommendsRoot')) {
                 if($command->recommendsRoot()) return true;
             }
         }
@@ -135,7 +145,7 @@ class Procedure extends Command
         foreach($this->commands as $command) {
 
             /* Skip evalutating commands that do not recommend root */
-            if(! method_exists($command, 'recommendsRoot')) continue;
+            if(! $command->hasPublicMethod('recommendsRoot')) continue;
 
             if($command->recommendsRoot() && ! ShellUser::getInstance()->isRoot()) {
                 $name = $command->getName();
@@ -157,10 +167,81 @@ class Procedure extends Command
         $class = JinitializeCommand::class;
         
         foreach($commands as $command) {
-            if(! is_subclass_of($command, $class)) {
+            if(! is_subclass_of($command, $class, false)) {
                 throw new \Exception("Commands given to a procedure class should be subclasses of $class");
             } 
         }
         $this->commands = $commands;
+    }
+
+    private function validate()
+    {
+        $errors = [];
+        $method = 'requiresExecuting';
+        $commandsThatWillExecuteBefore = [];
+
+        foreach($this->commands as $command) {
+
+            /* Save commands that are executed before next command */
+            /* Make sure that the command classes are compared instead of objects */
+            $commandsThatWillExecuteBefore[] = get_class($command);
+            
+            /* Skip methods that don't have the require method */
+            /* Executed methods should be saved before this in case they dont' have the method */
+            if(! $command->hasPublicMethod($method)) continue;
+
+            $notExecuted = array_diff($command->$method(), $commandsThatWillExecuteBefore);
+
+            /* If there are no problems, skip to next */
+            if(empty($notExecuted)) continue;
+
+            /* Construct error message */
+            $name = get_class($command);
+            $str = implode(', ', $notExecuted);
+            $errors[] = "$name: $str";
+        }
+
+        if(!empty($errors)) {
+            $pName = $this->getName();
+
+            $message = "Process $pName has commands that require other commands to be executed first:";
+            $message .= PHP_EOL;
+            $message .= implode(PHP_EOL, $errors);
+            $e = new CommandAbortedException($message);
+            $e->setCommand($this);
+            throw $e;
+        }
+    }
+
+    private function recommend(OutputInterface $output)
+    {
+        /* Similar to validate */
+        $rows = [];
+        $executed = [];
+        $method = 'recommendExecuting';
+        
+        foreach($this->commands as $command) {
+            $executed[] = get_class($command);
+            if(! $command->hasPublicMethod($method)) continue;
+
+            $notExecuted = array_diff($command->$method(), $executed);
+
+            foreach($notExecuted as $recommended) {
+                $rows[] = [$command->getPluginName(), $command->getName(), $recommended];
+            }
+        }
+
+        if(empty($rows)) return;
+
+        $this->io->note("Procedure $this has methods that recommend running the following methods before their execution:");
+        $table = new Table($output);
+        $table->setHeaders(['plugin', 'method', 'recommends']);
+        $table->setRows($rows);
+        $table->render();
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

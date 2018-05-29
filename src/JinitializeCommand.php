@@ -87,6 +87,26 @@ abstract class JinitializeCommand extends Command
         $this->input = $input;
     }
 
+    /**
+     * @param string $method Name of the queried method
+     *
+     * @return bool Wether this object has a public method called $method
+     */
+    public function hasPublicMethod(string $method)
+    {
+        if(! method_exists($this, $method)) return false;
+
+        $reflection = new \ReflectionMethod($this, $method);
+        if(! $reflection->isPublic()) return false;
+
+        return true;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
     protected abstract function handle($input, $output, $style);
 
     /* public abstract function revert(); */

@@ -9,6 +9,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Nonetallt\Jinitialize\JinitializeContainer;
 use Nonetallt\Jinitialize\Testing\Constraints\ContainerContains;
 use Nonetallt\Jinitialize\Testing\Constraints\ContainerEquals;
+use Nonetallt\Jinitialize\Procedure;
 
 class TestCase extends Test
 {
@@ -51,25 +52,27 @@ class TestCase extends Test
             /* throw new \Exception("Class $class given to runCommand should be a subclass of JinitializeCommand"); */
         }
 
-        $container = JinitializeContainer::getInstance();
+        $this->app->registerCommands('test', [$class]);
 
-        if(! $container->hasPlugin('test')) {
+        return $this->executeCommand(new $class('test'));
+    }
 
-            $this->app->registerPlugin([
-                'name' => 'test',
-                'commands' => [
-                    $class
-                ]
-            ]);
-        }
-        else {
-            /* If plugin is already registered, register commands only */
-            $this->app->registerCommands('test', [$class]);
-        }
+    protected function runCommandAsProcedure(string $class)
+    {
+        $commands = $this->app->registerCommands('test', [$class]);
+        $procedure = new Procedure('test:procedure', 'This is a test', $commands);
+        $this->app->add($procedure);
 
-        
-        $command = new $class('test');
-        return $this->executeCommand($command);
+        return $this->executeCommand($procedure);
+    }
+
+    protected function runProcedure(array $commands)
+    {
+        $commands = $this->app->registerCommands('test', $commands);
+        $procedure = new Procedure('test:procedure', 'This is a test', $commands);
+        $this->app->add($procedure);
+
+        return $this->executeCommand($procedure);
     }
 
     private function executeCommand($command)
@@ -110,21 +113,15 @@ class TestCase extends Test
     {
         $this->app = new JinitializeApplication();
         $this->registerLocalPlugin();
+
+        if(! $this->app->getContainer()->hasPlugin('test')) {
+            $this->app->registerPlugin(['name' => 'test']);
+        }
     }
 
     protected function tearDown()
     {
         /* Clear all values from the singleton container */
         JinitializeContainer::resetInstance();
-    }
-
-    public static function setUpBeforeClass()
-    {
-
-    }
-
-    public static function tearDownAfterClass()
-    {
-
     }
 }

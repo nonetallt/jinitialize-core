@@ -104,14 +104,24 @@ class JinitializeApplication extends Application
 
     /**
      * Register all commands for a given plugin
+     *
+     * @param string $plugin The plugin these commands will be registered for
+     * @param array $commands array containing the classnames of the commands
+     *
+     * @return array $newCommands array containing JinitializeCommand objects
+     *
      */
     public function registerCommands(string $plugin, array $commands)
     {
+        $newCommands = [];
+
         foreach($commands as $commandClass) {
             $command = new $commandClass($plugin);
             $command = CommandFactory::setNamespace($command);
             $this->add($command);
+            $newCommands[] = $command;
         }
+        return $newCommands;
     }
 
     public function registerSettings(string $plugin, array $settings)
