@@ -218,7 +218,7 @@ class Procedure extends Command
         /* Similar to validate */
         $rows = [];
         $executed = [];
-        $method = 'recommendExecuting';
+        $method = 'recommendsExecuting';
         
         foreach($this->commands as $command) {
             $executed[] = get_class($command);
