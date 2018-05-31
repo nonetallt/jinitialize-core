@@ -15,14 +15,14 @@ class JinitializeCommandTest extends TestCase
     
     public function testRecommendsExecutingFail()
     {
-        $tester = $this->runCommandAsProcedure(TestRecommendsExecutionCommand::class);
+        $tester = $this->runCommandsAsProcedure([ TestRecommendsExecutionCommand::class ]);
         $output = $tester->getDisplay();
         $this->assertContains('[NOTE] Procedure test:procedure has methods that recommend', $output);
     }
 
     public function testRecommendsExecutingSuccess()
     {
-        $tester = $this->runProcedure([ 
+        $tester = $this->runCommandsAsProcedure([ 
             TestExportCommand::class,
             TestRecommendsExecutionCommand::class
         ]);
@@ -34,17 +34,16 @@ class JinitializeCommandTest extends TestCase
     public function testRequiresExecutingFail()
     {
         $this->expectException(CommandAbortedException::class);
-        $this->runCommandAsProcedure(TestRequiresExecutionCommand::class);
+        $this->runCommandsAsProcedure([ TestRequiresExecutionCommand::class ]);
     }
 
     public function testRequiresExecutingSuccess()
     {
-        $commands = [
+        $this->runCommandsAsProcedure([
             TestExportCommand::class,
             TestRequiresExecutionCommand::class
-        ];
+        ]);
 
-        $this->runProcedure($commands);
         $this->assertContainerContains(['variable1' => 1]);
     }
 

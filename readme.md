@@ -12,8 +12,12 @@
 
 ## jinitialize-core
 
-* testing: possibility to test input
-* testing: possibility to test params
+Refactor
+* TestCase
+* Procedure
+
+runCommand (signature, procedure or command)
+runCommandClass (class)
 
 * jinitializeCommand
     * execute
@@ -28,14 +32,10 @@
 * procedure
     * when plugin is not found, use composer search to suggest packages to install
 
-* DOC: recommendsExecuting
-* DOC: requiresExecuting
-* DOC: belongsToProcess
-
 
 ## jinitialize-plugin
 
-* DOC: runProcedure, runCommandAsProcedure
+* DOC: reserved names: core, test, show list of others?
 * DOC: recommend documentation on imported and exported variables
 * DOC: recommend display which module value comes from when using imported values
 * autogenerate procedures command?
@@ -48,9 +48,6 @@
 * stub wrapper convert 'plugin name' to [PLUGIN_NAME]
 
 
-Refactor
-* TestCase
-* Procedure
 
 NEEDED FOR php project
 * project

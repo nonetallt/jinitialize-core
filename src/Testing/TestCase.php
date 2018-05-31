@@ -3,9 +3,11 @@
 namespace Nonetallt\Jinitialize\Testing;
 
 use PHPunit\Framework\TestCase as Test;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Command\Command;
+
 use Nonetallt\Jinitialize\JinitializeApplication;
 use Nonetallt\Jinitialize\JinitializeCommand;
-use Symfony\Component\Console\Tester\CommandTester;
 use Nonetallt\Jinitialize\JinitializeContainer;
 use Nonetallt\Jinitialize\Testing\Constraints\ContainerContains;
 use Nonetallt\Jinitialize\Testing\Constraints\ContainerEquals;
@@ -41,37 +43,43 @@ class TestCase extends Test
     /**
      * Execute a command using the classname
      * 
-     * @param string $class
-     * @return ComamndTester $tester
+     * @param string $command
+     * @return CommandTester $tester
      *
      */
-    protected function runCommand(string $class, array $args = [], array $input = [])
+    protected function runCommand(string $command, array $args = [], array $input = [])
     {
-        if(! is_subclass_of($class, JinitializeCommand::class)) {
-            return $this->executeCommand($class, $input);
+        return $this->executeCommand($this->getCommand($command), $args, $input);
+    }
+
+    protected function runCommandsAsProcedure(array $commands, array $args = [], array $input = [])
+    {
+        $objects = [];
+        foreach($commands as $command) {
+            $objects[] = $this->getCommand($command);
         }
 
-        $this->app->registerCommands('test', [$class]);
-
-        return $this->executeCommand(new $class('test'), $args, $input);
-    }
-
-    protected function runCommandAsProcedure(string $class)
-    {
-        $commands = $this->app->registerCommands('test', [$class]);
-        $procedure = new Procedure('test:procedure', 'This is a test', $commands);
-        $this->app->add($procedure);
-
-        return $this->executeCommand($procedure);
-    }
-
-    protected function runProcedure(array $commands)
-    {
         $commands = $this->app->registerCommands('test', $commands);
         $procedure = new Procedure('test:procedure', 'This is a test', $commands);
         $this->app->add($procedure);
 
-        return $this->executeCommand($procedure);
+        return $this->executeCommand($procedure, $args, $input);
+    }
+
+    private function getCommand(string $command)
+    {
+        /* Command is classname */
+        if(is_subclass_of($command, JinitializeCommand::class)) {
+
+            /* Register the class for test plugin */
+            $this->app->registerCommands('test', [$command]);
+
+            /* Create new class object */
+            return new $command('test');
+        }
+
+        /* Command is signature call */
+        return $this->app->find($command);
     }
 
     private function executeCommand($command, array $args = [], array $input = [])
