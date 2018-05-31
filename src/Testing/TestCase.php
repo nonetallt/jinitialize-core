@@ -41,10 +41,13 @@ class TestCase extends Test
     }
     
     /**
-     * Execute a command using the classname
+     * Execute a command using the classname or command signature
      * 
      * @param string $command
-     * @return CommandTester $tester
+     * @param array $args The command arguments and options
+     * @param array $input The user input
+     *
+     * @return Symfony\Component\Console\Tester\CommandTester $tester
      *
      */
     protected function runCommand(string $command, array $args = [], array $input = [])
@@ -59,13 +62,19 @@ class TestCase extends Test
             $objects[] = $this->getCommand($command);
         }
 
-        $commands = $this->app->registerCommands('test', $commands);
-        $procedure = new Procedure('test:procedure', 'This is a test', $commands);
+        $procedure = new Procedure('test:procedure', 'This is a test', $objects);
         $this->app->add($procedure);
 
         return $this->executeCommand($procedure, $args, $input);
     }
 
+    /**
+     * Get a register Command object by classname or command signature
+     *
+     * @param string $command
+     *
+     * @return Symfony\Component\Console\Command\Command $command
+     */
     private function getCommand(string $command)
     {
         /* Command is classname */
@@ -82,18 +91,14 @@ class TestCase extends Test
         return $this->app->find($command);
     }
 
-    private function executeCommand($command, array $args = [], array $input = [])
+    private function executeCommand(Command $command, array $args = [], array $input = [])
     {
-        $name = $command;
-
-        if(! is_string($command)) {
-            $name = $command->getName();
-        }
-
+        $name = $command->getName();
         $command = $this->app->find($name);
+
         $tester = new CommandTester($command);
         $tester->setInputs($input);
-        $tester->execute(array_merge($args, ['command' => $command->getName()]));
+        $tester->execute(array_merge($args, ['command' => $name]));
 
         return $tester;
     }

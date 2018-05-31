@@ -13,11 +13,7 @@
 ## jinitialize-core
 
 Refactor
-* TestCase
 * Procedure
-
-runCommand (signature, procedure or command)
-runCommandClass (class)
 
 * jinitializeCommand
     * execute
