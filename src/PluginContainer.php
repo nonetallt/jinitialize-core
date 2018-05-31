@@ -59,4 +59,9 @@ class PluginContainer
         $value = Strings::toSnakeCase($value);
         return '[' . str_replace(' ', '_', strtoupper($value)) . ']';
     }
+
+    public function __toString()
+    {
+        return print_r($this->getData(), true);
+    }
 }

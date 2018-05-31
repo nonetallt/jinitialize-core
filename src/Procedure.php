@@ -170,6 +170,7 @@ class Procedure extends Command
             if(! is_subclass_of($command, $class, false)) {
                 throw new \Exception("Commands given to a procedure class should be subclasses of $class");
             } 
+            $command->setBelongsToProcedure(true);
         }
         $this->commands = $commands;
     }
@@ -204,7 +205,7 @@ class Procedure extends Command
         if(!empty($errors)) {
             $pName = $this->getName();
 
-            $message = "Process $pName has commands that require other commands to be executed first:";
+            $message = "Procedure $pName has commands that require other commands to be executed first:";
             $message .= PHP_EOL;
             $message .= implode(PHP_EOL, $errors);
             $e = new CommandAbortedException($message);

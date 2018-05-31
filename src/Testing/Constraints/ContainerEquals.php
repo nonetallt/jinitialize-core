@@ -26,6 +26,8 @@ class ContainerEquals extends ParentConstraint
 
     public function toString()
     {
-        return "is contained in application container";
+        $container = JinitializeContainer::getInstance();
+
+        return "is equal to application container $container";
     }
 }

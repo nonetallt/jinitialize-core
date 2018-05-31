@@ -16,6 +16,7 @@ abstract class JinitializeCommand extends Command
     private $user;
     private $plugin;
     private $input;
+    private $belongsToProcedure;
 
     public function __construct(string $plugin)
     {
@@ -23,6 +24,7 @@ abstract class JinitializeCommand extends Command
         $this->user = ShellUser::getInstance();
         $this->plugin = $plugin;
         $this->input = new StringInput('');
+        $this->belongsToProcedure = false;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -85,6 +87,16 @@ abstract class JinitializeCommand extends Command
     public function setInput(InputInterface $input)
     {
         $this->input = $input;
+    }
+
+    public function setBelongsToProcedure(bool $bool)
+    {
+        $this->belongsToProcedure = $bool;
+    }
+
+    public function belongsToProcedure()
+    {
+        return $this->belongsToProcedure;
     }
 
     /**

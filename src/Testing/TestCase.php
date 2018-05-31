@@ -45,16 +45,15 @@ class TestCase extends Test
      * @return ComamndTester $tester
      *
      */
-    protected function runCommand(string $class)
+    protected function runCommand(string $class, array $args = [], array $input = [])
     {
         if(! is_subclass_of($class, JinitializeCommand::class)) {
-            return $this->executeCommand($class);
-            /* throw new \Exception("Class $class given to runCommand should be a subclass of JinitializeCommand"); */
+            return $this->executeCommand($class, $input);
         }
 
         $this->app->registerCommands('test', [$class]);
 
-        return $this->executeCommand(new $class('test'));
+        return $this->executeCommand(new $class('test'), $args, $input);
     }
 
     protected function runCommandAsProcedure(string $class)
@@ -75,7 +74,7 @@ class TestCase extends Test
         return $this->executeCommand($procedure);
     }
 
-    private function executeCommand($command)
+    private function executeCommand($command, array $args = [], array $input = [])
     {
         $name = $command;
 
@@ -85,7 +84,8 @@ class TestCase extends Test
 
         $command = $this->app->find($name);
         $tester = new CommandTester($command);
-        $tester->execute(['command' => $command->getName()]);
+        $tester->setInputs($input);
+        $tester->execute(array_merge($args, ['command' => $command->getName()]));
 
         return $tester;
     }

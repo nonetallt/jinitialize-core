@@ -53,4 +53,31 @@ class JinitializeContainer
     {
         return $this->plugins;
     }
+
+    /**
+     * Get data in the container.
+     *
+     * @param string|null $plugin plugin scope to get only data for a specific
+     * plugin.
+     *
+     */
+    public function getData(string $plugin = null)
+    {
+        /* Only get data for single plugin */
+        if(! is_null($plugin)) {
+            return $this->getPlugin($plugin)->getContainer()->getData();
+        }
+
+        /* Get data for all plugins */
+        $data = [];
+        foreach($this->plugins as $plugin) {
+            $data[$plugin->getName()] = $plugin->getContainer()->getData();
+        }
+        return $data;
+    }
+
+    public function __toString()
+    {
+        return print_r($this->getData(), true);
+    }
 }

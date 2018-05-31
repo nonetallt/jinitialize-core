@@ -12,15 +12,25 @@
 
 ## jinitialize-core
 
-* recommendsExecuting
+* testing: possibility to test input
+* testing: possibility to test params
+
+* jinitializeCommand
+    * execute
+        * check receommended
+        * check required
+
 * print suggested settings list
     * on composerScripts
     * on application start
     * .env interactive editor
 
-* use values from other modules when possible ()
 * procedure
     * when plugin is not found, use composer search to suggest packages to install
+
+* DOC: recommendsExecuting
+* DOC: requiresExecuting
+* DOC: belongsToProcess
 
 
 ## jinitialize-plugin
