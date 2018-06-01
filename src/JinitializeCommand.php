@@ -6,6 +6,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\StringInput;
 
 use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
@@ -23,7 +24,7 @@ abstract class JinitializeCommand extends Command
         parent::__construct();
         $this->user = ShellUser::getInstance();
         $this->plugin = $plugin;
-        $this->input = new StringInput('');
+        $this->input = new ArrayInput([]);
         $this->belongsToProcedure = false;
     }
 
@@ -79,14 +80,31 @@ abstract class JinitializeCommand extends Command
         return JinitializeContainer::getInstance()->getPlugin($this->getPluginName())->getContainer();
     }
 
+    /**
+     * Used by procedure to get input for command signatures
+     */
     public function getInput()
     {
         return $this->input;
     }
 
-    public function setInput(InputInterface $input)
+    public function setInput(StringInput $input)
     {
-        $this->input = $input;
+        /* Bind args array keys to input definition of the command */
+        $input->bind($this->getDefinition());
+
+        /* Convert string input to array */
+        $args = $input->getArguments();
+        $options = [];
+
+        /* Append the 2 dashes before each option name */
+        foreach($input->getOptions() as $key => $value) {
+            $options["--$key"] = $value;
+        }
+
+        /* Bind the array input to this command definition */
+        $this->input = new ArrayInput(array_merge($input->getArguments(), $options));
+        $this->input->bind($this->getDefinition());
     }
 
     public function setBelongsToProcedure(bool $bool)

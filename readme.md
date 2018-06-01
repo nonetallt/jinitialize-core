@@ -9,8 +9,6 @@
 
 ## jinitialize-core
 
-Running commands and procedures by signature should be tested
-
 * jinitializeCommand
     * execute
         * check receommended
@@ -27,6 +25,7 @@ Running commands and procedures by signature should be tested
 
 ## jinitialize-plugin
 
+* DOC: register local plugin
 * DOC: reserved names: core, test, show list of others?
 * DOC: recommend documentation on imported and exported variables
 * DOC: recommend display which module value comes from when using imported values

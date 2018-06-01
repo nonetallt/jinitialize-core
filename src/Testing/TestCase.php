@@ -5,6 +5,8 @@ namespace Nonetallt\Jinitialize\Testing;
 use PHPunit\Framework\TestCase as Test;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Input\ArrayInput;
 
 use Nonetallt\Jinitialize\JinitializeApplication;
 use Nonetallt\Jinitialize\JinitializeCommand;
@@ -50,7 +52,17 @@ class TestCase extends Test
      */
     protected function runCommand(string $command, array $args = [], array $input = [])
     {
-        return $this->executeCommand($this->getCommand($command), $args, $input);
+        $command = $this->getCommand($command);
+        $arguments = $command->getInput()->getArguments();
+        $options = [];
+
+        /* Append the 2 dashes before each option name before using them as input for tester */
+        foreach($command->getInput()->getOptions() as $key => $value) {
+            $options["--$key"] = $value;
+        }
+
+        $args = array_merge($args, $arguments, $options);
+        return $this->executeCommand($command, $args, $input);
     }
 
     protected function runCommandsAsProcedure(array $commands, array $args = [], array $input = [])
@@ -86,7 +98,18 @@ class TestCase extends Test
         }
 
         /* Command is signature call */
-        return $this->app->find($command);
+        $parts = explode(' ', $command, 2);
+
+        /* Find the command using signature */
+        $command =  $this->app->find($parts[0]);
+
+        /* Get part of string after a space, containing all args */ 
+        $argString = $parts[1] ?? '';
+
+        /* Save args to command for ease of access */
+        $command->setInput(new StringInput($argString));
+          
+        return $command;
     }
 
     private function executeCommand(Command $command, array $args = [], array $input = [])

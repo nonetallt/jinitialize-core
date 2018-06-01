@@ -11,17 +11,11 @@ class ContainerEquals extends ParentConstraint
         $container = JinitializeContainer::getInstance();
         $values = [];
 
-        /* If plugin is not specified, get all containers */
-        if(is_null($this->plugin)) {
-            foreach($container->getPlugins() as $plugin) {
-                $values = array_merge($values, $plugin->getContainer()->getData());
-            }
-        }
-        else {
-            $values = $container->getPlugin($this->plugin)->getContainer()->getData();
+        if(! is_null($this->plugin)) {
+            return $other === $container->getData($this->plugin);
         }
 
-        return $values === $other;
+        return $other === $container->getData();
     }
 
     public function toString()

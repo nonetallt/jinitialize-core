@@ -3,13 +3,16 @@
 namespace Nonetallt\Jinitialize\Commands;
 
 use Nonetallt\Jinitialize\JinitializeCommand as Command;
+use Symfony\Component\Console\Input\InputArgument;
 
 class CreatePlugin extends Command
 {
 
     protected function configure()
     {
-        $this->setName('create-plugin')->setDescription('Create a new jinitialize plugin project');
+        $this->setName('create-plugin');
+        $this->setDescription('Create a new jinitialize plugin project');
+        $this->addArgument('test', InputArgument::OPTIONAL, 'for testing purposes');
     }
 
     protected function handle($input, $output, $style)
