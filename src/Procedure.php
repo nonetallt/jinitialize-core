@@ -36,10 +36,8 @@ class Procedure extends Command
      */
     protected function configure()
     {
-        $this
-            ->setName($this->name)
-            ->setDescription($this->description)
-            ;
+        $this->setName($this->name);
+        $this->setDescription($this->description) ;
     }
 
     /**
@@ -54,6 +52,7 @@ class Procedure extends Command
         $this->io = new SymfonyStyle($input, $output);
         $app = $this->getApplication();
 
+        /* Print list of commands that are recommended for running before others */
         $this->recommend($output);
 
         /* Check that the whole procedure can be executed by the user */

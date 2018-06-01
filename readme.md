@@ -12,8 +12,7 @@
 
 ## jinitialize-core
 
-Refactor
-* Procedure
+Running commands and procedures by signature should be tested
 
 * jinitializeCommand
     * execute
