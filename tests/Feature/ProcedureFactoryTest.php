@@ -72,6 +72,7 @@ class ProcedureFactoryTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+        $this->registerLocalPlugin(__DIR__ . '/../../composer.json');
         $this->procedure = $this->createProcedure('test-procedure');
     }
 }

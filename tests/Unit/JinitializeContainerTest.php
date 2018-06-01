@@ -18,7 +18,6 @@ class JinitializeContainerTest extends TestCase
     {
         $this->container()->getPlugin('test')->getContainer()->set('value', 1); 
         $this->assertEquals([
-            'core' => [],
             'test' =>  ['value' => 1]
         ], 
         $this->container()->getData());

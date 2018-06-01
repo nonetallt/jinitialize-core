@@ -18,14 +18,12 @@ class TestCase extends Test
     private $app;
 
     /* Register this plugin for testing purposes in plugins */
-    private function registerLocalPlugin()
+    protected function registerLocalPlugin(string $composerPath)
     {
-
-        $path = __DIR__ . '/../../composer.json';
         $composer = [];
 
-        if(file_exists($path)) {
-            $composer = json_decode(file_get_contents($path), true);
+        if(file_exists($composerPath)) {
+            $composer = json_decode(file_get_contents($composerPath), true);
         }
 
         /* Skip packages that do not define plugin in extra */
@@ -125,7 +123,6 @@ class TestCase extends Test
     protected function setUp()
     {
         $this->app = new JinitializeApplication();
-        $this->registerLocalPlugin();
 
         if(! $this->app->getContainer()->hasPlugin('test')) {
             $this->app->registerPlugin(['name' => 'test']);

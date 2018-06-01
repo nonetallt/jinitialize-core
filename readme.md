@@ -2,11 +2,8 @@
 
 ## jinitialize
 
-* move jinitialize file from core
-* project structure
-* git setup
 * packagist setup
-* every command should be wrapped in a procedure
+* register commands from the local folder
 * register procedures from the local folder
 
 
