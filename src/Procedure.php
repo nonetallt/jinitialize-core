@@ -165,12 +165,21 @@ class Procedure extends Command
     private function setCommands(array $commands)
     {
         $class = JinitializeCommand::class;
+        $existingCommands = [];
         
         foreach($commands as $command) {
             if(! is_subclass_of($command, $class, false)) {
                 throw new \Exception("Commands given to a procedure class should be subclasses of $class");
             } 
+
+            if(in_array($command, $existingCommands, true)) {
+                $name = $command->getName();
+                $msg = "A procedure should never be initialized with duplicate command objects ($name)";
+                throw new \Exception($msg);
+            }
+
             $command->setBelongsToProcedure(true);
+            $existingCommands[] = $command;
         }
         $this->commands = $commands;
     }

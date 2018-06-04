@@ -6,8 +6,8 @@ use Symfony\Component\Console\Application;
 use Dotenv\Dotenv;
 use Nonetallt\Jinitialize\Commands\CreatePlugin;
 use Nonetallt\Jinitialize\Procedure;
-use Nonetallt\Jinitialize\Plugin\JinitializeCommand;
-use Nonetallt\Jinitialize\Plugin\Plugin;
+use Nonetallt\Jinitialize\JinitializeCommand;
+use Nonetallt\Jinitialize\Plugin;
 
 /**
  * Responsible for registering the application commands and procedures
@@ -159,5 +159,26 @@ class JinitializeApplication extends Application
             }
         }
         return $missing;
+    }
+
+    /** 
+     * The found command should be ovewritten in case it has been already run. 
+     * The application will add command name to input definition arguments
+     * and will mess up the arguments list otherwise.
+     */
+    public function getNew($name)
+    {
+        $command =  parent::get($name);
+        return $this->newCommand($command);
+    }
+
+    private function newCommand($from)
+    {
+        if(! is_subclass_of($from, JinitializeCommand::class)) return $from;
+
+        $class = get_class($from);
+        $command = new $class($from->getPluginName());
+
+        return $command;
     }
 }

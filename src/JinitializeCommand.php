@@ -18,24 +18,23 @@ abstract class JinitializeCommand extends Command
     private $plugin;
     private $input;
     private $belongsToProcedure;
+    private $isExecuted;
 
     public function __construct(string $plugin)
     {
         parent::__construct();
-        $this->user = ShellUser::getInstance();
-        $this->plugin = $plugin;
-        $this->input = new ArrayInput([]);
+        $this->user               = ShellUser::getInstance();
+        $this->plugin             = $plugin;
+        $this->input              = new ArrayInput([]);
         $this->belongsToProcedure = false;
+        $this->isExecuted         = false;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->isExecuted = true;
         $style = new SymfonyStyle($input, $output);
-        
-        $style->title('Initializing ' . $this->getName());
         $this->handle($input, $output, $style);
-
-        $style->success("{$this->getName()} initialized successfully");
     }
 
     protected function abort(string $message)
@@ -130,6 +129,11 @@ abstract class JinitializeCommand extends Command
         if(! $reflection->isPublic()) return false;
 
         return true;
+    }
+
+    public function isExecuted()
+    {
+        return $this->isExecuted;
     }
 
     public function __toString()

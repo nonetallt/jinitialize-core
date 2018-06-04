@@ -27,7 +27,8 @@ class CommandFactory
         $name = self::commandSignatureFor($plugin, $name);
 
         try{
-            $command = $this->app->find($name);
+            $command = $this->app->getNew($name);
+            $command->setName($name);
             $command->setInput(new StringInput($arguments));
             return $command;
         }

@@ -16,5 +16,12 @@
         "commands": [
             "missing-plugin:nonexistent-command"
         ]
+    },
+    "test-duplicate-commands": {
+        "description": "This is a test with multiple instances of same command",
+        "commands": [
+            "core:create-plugin test",
+            "core:create-plugin test"
+        ]
     }
 }

@@ -7,6 +7,7 @@ use Tests\Classes\TestSumCommand;
 use Tests\Classes\TestSumArgumentsCommand;
 use Tests\Classes\TestExportCommand;
 use Tests\Classes\TestImportCommand;
+use Nonetallt\Jinitialize\Procedure;
 
 class TestCaseTest extends TestCase
 {
@@ -84,5 +85,47 @@ class TestCaseTest extends TestCase
 
         $this->runCommandsAsProcedure(['test:arguments 1 2 --number3=3']);
         $this->assertContainerEquals(['test' => ['sum' => 6]]);
+    }
+
+    public function testRunningMultipleCommandsWithArgs()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestSumArgumentsCommand::class]);
+
+        $this->runCommand('test:arguments 1 2 --number3=3');
+        $this->assertContainerEquals(['test' => ['sum' => 6]]);
+
+        $this->runCommand('test:arguments 1 2 --number3=3');
+        $this->assertContainerEquals(['test' => ['sum' => 6]]);
+    }  
+
+    public function testRunningMultipleProceduresWithArgs()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestSumArgumentsCommand::class]);
+
+        $this->runCommandsAsProcedure(['test:arguments 1 2 --number3=3']);
+        $this->assertContainerEquals(['test' => ['sum' => 6]]);
+
+        $this->runCommandsAsProcedure(['test:arguments 1 2 --number3=3']);
+        $this->assertContainerEquals(['test' => ['sum' => 6]]);
+    }
+
+    public function testRunningMultipleCommandsAsProcedureWithArgs()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestSumArgumentsCommand::class]);
+
+        $this->runCommandsAsProcedure([
+            'test:arguments 1 2 --number3=3',
+            'test:arguments 1 2 --number3=4'
+        ]);
+        $this->assertContainerEquals(['test' => ['sum' => 7]]);
+
+        $this->runCommandsAsProcedure([
+            'test:arguments 1 2 --number3=3',
+            'test:arguments 1 2 --number3=2'
+        ]);
+        $this->assertContainerEquals(['test' => ['sum' => 5]]);
     }
 }

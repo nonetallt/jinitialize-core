@@ -101,21 +101,28 @@ class TestCase extends Test
         $parts = explode(' ', $command, 2);
 
         /* Find the command using signature */
-        $command =  $this->app->find($parts[0]);
+        $command =  $this->app->getNew($parts[0]);
+
+        /* 
+          The found command should be ovewritten in case it has been already run. 
+          The application will add command name to input definition arguments
+          and will mess up the arguments list otherwise.
+         */
+        $this->app->add($command);
 
         /* Get part of string after a space, containing all args */ 
         $argString = $parts[1] ?? '';
 
         /* Save args to command for ease of access */
         $command->setInput(new StringInput($argString));
-          
+
         return $command;
     }
 
     private function executeCommand(Command $command, array $args = [], array $input = [])
     {
         $name = $command->getName();
-        $command = $this->app->find($name);
+        $command = $this->app->get($name);
 
         $tester = new CommandTester($command);
         $tester->setInputs($input);

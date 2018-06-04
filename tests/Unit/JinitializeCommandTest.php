@@ -47,6 +47,23 @@ class JinitializeCommandTest extends TestCase
         $this->assertContainerContains(['variable1' => 1]);
     }
 
+    public function testIsNotSetExecutedByDefault()
+    {
+        $command = new TestExportCommand('test');
+        $this->assertFalse($command->isExecuted());
+    }
+
+    public function testIsSetExecutedAfterExecution()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [new TestExportCommand('test')]);
+
+        $this->runCommand('test:export');
+
+        $command = $app->find('test:export');
+        $this->assertTrue($command->isExecuted());
+    }
+
     public function testBelongsToProcedureFalse()
     {
         $command = new TestExportCommand('test');

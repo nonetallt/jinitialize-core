@@ -2,12 +2,14 @@
 
 ## jinitialize
 
-* packagist setup
+* readme picture
 * register commands from the local folder
 * register procedures from the local folder
 
 
 ## jinitialize-core
+
+* parse [ENV PLACEHOLDERS] from procedure.json to allow usage of settings and exported variables as arguments and options
 
 * jinitializeCommand
     * execute
@@ -25,16 +27,18 @@
 
 ## jinitialize-plugin
 
-* DOC: register local plugin
 * DOC: reserved names: core, test, show list of others?
-* DOC: recommend documentation on imported and exported variables
 * DOC: recommend display which module value comes from when using imported values
+
+* generate command stub command
 * autogenerate procedures command?
+* autogenerate doc command (autoschema)
+
+* move isset from UnitTest to some helper lib
 
 
 ## jinitialize-plugin-project
 
-* refactor composer.json (namespace?)
 * project structure package (from create plugin structure)
 * stub wrapper convert 'plugin name' to [PLUGIN_NAME]
 

@@ -55,6 +55,16 @@ class ProcedureTest extends TestCase
         $this->assertEquals("", file_get_contents($this->outputFile()));
     }
 
+    public function testCantBeCreatedWithDuplicateInstanceCommands()
+    {
+        $msg = "A procedure should never be initialized with duplicate command objects (example)";
+        $this->expectExceptionMessage($msg);
+
+        $app = new TestApplication($this->projectRoot());
+        $command = $this->mockCommand($app, 'example');
+        $procedure = new Procedure('test', 'test', [$command, $command]);
+    }
+
     private function mockCommand($app, string $name)
     {
         $command = $app->createCommand($name, function($command) use($name){

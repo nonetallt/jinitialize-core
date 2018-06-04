@@ -1,4 +1,4 @@
 .env
 vendor/
-test/output/
+tests/output/
 boostrap/cache/

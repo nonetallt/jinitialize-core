@@ -53,8 +53,14 @@ class ProcedureFactoryTest extends TestCase
     public function testGetNames()
     {
         $factory = $this->createFactory();
-        $names = ['test-procedure', 'test-missing-command', 'test-missing-plugin'];
+        $names = ['test-procedure', 'test-missing-command', 'test-missing-plugin', 'test-duplicate-commands'];
         $this->assertEquals($names, $factory->getNames());
+    }
+
+    public function testProceduresCanWorkWithDuplicateCommands()
+    {
+        $procedure = $this->createProcedure('test-duplicate-commands');
+        $this->assertInstanceOf(Procedure::class, $procedure);
     }
 
     private function createFactory()
