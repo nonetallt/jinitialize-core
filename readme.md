@@ -37,14 +37,7 @@
 * move isset from UnitTest to some helper lib
 
 
-## jinitialize-plugin-project
-
-* stub wrapper convert 'plugin name' to [PLUGIN_NAME]
-
-
-
 NEEDED FOR php project
-* project
 * git
 * shell
 
