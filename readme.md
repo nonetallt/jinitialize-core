@@ -9,55 +9,52 @@
 
 ## jinitialize-core
 
+* git plugin
+
 * parse [ENV PLACEHOLDERS] from procedure.json to allow usage of settings and exported variables as arguments and options
 
-* jinitializeCommand
-    * execute
-        * check receommended
-        * check required
+* remove settings: use above instead, update doc
 
-* print suggested settings list
-    * on composerScripts
-    * on application start
-    * .env interactive editor
+* [?] JinitializeCommand: executesOther method, lists commands that are ran by the
+  command
 
-* procedure
-    * when plugin is not found, use composer search to suggest packages to install
+* [REQUIRES ENV EDITOR] print placeholder setting list when running procedure -> .env interactive editor
+
+* refactor most of required/recommend method to JinitializeCommand class, use in both
+  procedure and command (check on execute)
+
+* procedure: when plugin is not found, use composer search to suggest packages to install
 
 
 ## jinitialize-plugin
 
 * DOC: reserved names: core, test, show list of others?
-* DOC: recommend display which module value comes from when using imported values
 
+* move isset from UnitTest to some helper lib
 * generate command stub command
 * autogenerate procedures command?
 * autogenerate doc command (autoschema)
 
-* move isset from UnitTest to some helper lib
 
+# Planned procedures
 
-NEEDED FOR php project
-* git
-
-
+* php-package
+* laravel-local
+* laravel-package
+* laravel-remote
 
 
 # Planned modules
 
-* new laravel project installer
-* apache2 local
-* existing laravel project installer
+* apache2
+* laravel
 * tool: git project (bitbucket and github)
-* tool: tags
 * tool: laravel-routes
 * tool: laravel-schema
 * tool: gulp
 * tool: robo
 * tool: phpunit
 * laravel mix setup
-* laravel new package installer
-* php new package installer
 * npm new package installer
 * phaser setup (mix loaders option if webpack.mix.js is found)
 * babel boilerplate setup
@@ -68,14 +65,6 @@ NEEDED FOR php project
 * site status checker with guzzle
 * .env editor
 
-#GLOBAL .ENV
-* site directory
-* author name
-* author email
-* preferred psr
-* preferred stability
-* preferred license
-
 
 ## jinitialize-plugin-mysql
 
@@ -84,4 +73,3 @@ NEEDED FOR php project
 * check if user exists
 * set db default collation
 * set db default driver innoDB
-
