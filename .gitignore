@@ -1,4 +1,5 @@
 .env
 vendor/
 tests/output/
-boostrap/cache/
+bootstrap/cache/*
+!bootstrap/cache/.keep
