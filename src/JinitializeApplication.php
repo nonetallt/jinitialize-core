@@ -19,7 +19,7 @@ class JinitializeApplication extends Application
     {
         parent::__construct('jinitialize', '1.0.0');
 
-        if(! is_null($dotenvDir)) {
+        if(! is_null($dotenvDir) && file_exists($dotenvDir . '/.env')) {
             /* Load .env when application is created */
             $dotenv = new Dotenv($dotenvDir);
             $dotenv->load();
@@ -161,11 +161,6 @@ class JinitializeApplication extends Application
         return $missing;
     }
 
-    /** 
-     * The found command should be ovewritten in case it has been already run. 
-     * The application will add command name to input definition arguments
-     * and will mess up the arguments list otherwise.
-     */
     public function getNew($name)
     {
         $command =  parent::get($name);

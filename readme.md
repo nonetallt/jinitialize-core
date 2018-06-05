@@ -39,7 +39,6 @@
 
 ## jinitialize-plugin-project
 
-* project structure package (from create plugin structure)
 * stub wrapper convert 'plugin name' to [PLUGIN_NAME]
 
 
