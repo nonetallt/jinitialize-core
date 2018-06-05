@@ -1,0 +1,9 @@
+{
+    "test": {
+        "description": "This is a test procedure",
+        "commands": [
+            "test:arguments 1 2 --number3=3",
+            "test:arguments 1 2 --number3=3"
+        ]
+    }
+}

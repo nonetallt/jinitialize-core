@@ -38,6 +38,16 @@ class ProcedureFactoryTest extends TestCase
         $this->assertEquals('test', $input->getFirstArgument());
     }
 
+    public function testCreatedProceduresHaveArguments()
+    {
+        $procedure = $this->createProcedure('test-duplicate-commands');
+        $commands = $procedure->getCommands();
+
+        foreach($commands as $command) {
+            $this->assertEquals('test', $command->getInput()->getFirstArgument());
+        }
+    }
+
     public function testNonexistentCommand()
     {
         $this->expectException(CommandNotFoundException::class);

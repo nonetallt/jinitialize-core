@@ -20,6 +20,11 @@ trait Paths
         return __DIR__ . '/../output';
     }
 
+    private function inputFolder()
+    {
+        return __DIR__ . '/../input';
+    }
+
     private function outputFile()
     {
         return $this->outputFolder() . '/command.out';

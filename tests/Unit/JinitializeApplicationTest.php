@@ -2,13 +2,14 @@
 
 namespace Tests\Feature;
 
-use PHPunit\Framework\TestCase;
+use Nonetallt\Jinitialize\Testing\TestCase;
 use Tests\Traits\CleansOutput;
 use Nonetallt\Jinitialize\ComposerScripts;
 use Tests\Classes\TestImportCommand;
 use Tests\Classes\TestExportCommand;
 use Nonetallt\Jinitialize\JinitializeApplication;
 use Nonetallt\Jinitialize\JinitializeContainer;
+use Tests\Classes\TestSumArgumentsCommand;
 
 
 class JinitializeApplicationTest extends TestCase
@@ -17,6 +18,8 @@ class JinitializeApplicationTest extends TestCase
 
     public function testRegisterPlugins()
     {
+        $this->cleanOutput();
+
         /* Create plugins.php file as manifest output */
         $output = $this->outputFolder() . '/plugins.php';
 
@@ -42,5 +45,22 @@ class JinitializeApplicationTest extends TestCase
 
         /* Assert that plugin is defined in container */
         $this->assertNotNull(JinitializeContainer::getInstance()->getPlugin('test'));
+    }
+
+    public function testRegisteredProceduresHaveArgumentsAndOptions()
+    {
+        parent::setUp();
+        $this->cleanOutput();
+
+        $app = $this->getApplication();
+        $app->registerCommands('test', [ TestSumArgumentsCommand::class ]);
+        $app->registerProcedures('test', ['procedure.json'], $this->inputFolder());
+
+        $this->runProcedure('test');
+        $this->assertContainerEquals(['test' => ['sum' => 6]]);
+    }
+
+    public function setUp()
+    {
     }
 }

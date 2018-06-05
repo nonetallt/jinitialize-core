@@ -65,6 +65,12 @@ class TestCase extends Test
         return $this->executeCommand($command, $args, $input);
     }
 
+    protected function runProcedure(string $procedure)
+    {
+        $procedure = $this->app->get($procedure);
+        return $this->executeCommand($procedure);
+    }
+
     protected function runCommandsAsProcedure(array $commands, array $args = [], array $input = [])
     {
         $objects = [];

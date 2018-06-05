@@ -63,7 +63,6 @@ class Procedure extends Command
         foreach($this->commands as $command) {
 
             try {
-                $command = $app->find($command->getName());
                 $this->commandsExecuted[] = $command;
                 $command->run($command->getInput(), $output);
             }
