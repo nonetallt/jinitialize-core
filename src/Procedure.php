@@ -78,6 +78,8 @@ class Procedure extends Command
             }
         }
 
+        /* Print empty line before success */
+        $output->writeLn('');
         $this->io->success("Procedure $this->name completed");
         return true;
     }

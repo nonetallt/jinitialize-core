@@ -39,7 +39,6 @@
 
 NEEDED FOR php project
 * git
-* shell
 
 
 
