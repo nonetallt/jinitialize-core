@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Tests\Classes\TestRequiresExecutionCommand;
 use Tests\Classes\TestRecommendsExecutionCommand;
 use Tests\Classes\TestExportCommand;
+use Tests\Classes\TestWasOptionPassedCommand;
 
 use Nonetallt\Jinitialize\Testing\TestCase;
 use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
@@ -75,5 +76,32 @@ class JinitializeCommandTest extends TestCase
         $command = new TestExportCommand('test');
         $procedure = new Procedure('test', 'this is a test', [$command]);
         $this->assertTrue($command->belongsToProcedure());
+    }
+
+    public function testWasOptionPassedShouldReturnFalseWhenOptionsAreNotSet()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestWasOptionPassedCommand::class]);
+        $this->runCommand('test:option-passed');
+
+        $this->assertContainerEquals(['test' => ['option1' => false, 'option2' => false]]);
+    }
+
+    public function testWasOptionPassedShouldReturnTrueWhenOptionsAreSet()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestWasOptionPassedCommand::class]);
+        $this->runCommand('test:option-passed --option1 --option2');
+
+        $this->assertContainerEquals(['test' => ['option1' => true, 'option2' => true]]);
+    }
+
+    public function testWasOptionPassedShouldReturnTrueWhenOptionShortcutsAreUsed()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestWasOptionPassedCommand::class]);
+        $this->runCommand('test:option-passed -a -b');
+
+        $this->assertContainerEquals(['test' => ['option1' => true, 'option2' => true]]);
     }
 }
