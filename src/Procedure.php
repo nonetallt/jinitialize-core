@@ -247,6 +247,9 @@ class Procedure extends Command
         $table->setHeaders(['plugin', 'method', 'recommends']);
         $table->setRows($rows);
         $table->render();
+
+        /* Write empty line after table */
+        $output->writeLn('');
     }
 
     public function __toString()
