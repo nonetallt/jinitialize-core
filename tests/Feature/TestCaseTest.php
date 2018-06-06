@@ -130,7 +130,7 @@ class TestCaseTest extends TestCase
         $this->assertContainerEquals(['test' => ['sum' => 5]]);
     }
 
-    public function testRevertCommand()
+    public function testExtendedCommandTesterCanReturnCommand()
     {
         $app = $this->getApplication();
         $app->registerCommands('test', [TestRevertCommand::class]);
