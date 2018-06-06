@@ -3,7 +3,6 @@
 namespace Nonetallt\Jinitialize\Testing;
 
 use PHPunit\Framework\TestCase as Test;
-use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -47,7 +46,7 @@ class TestCase extends Test
      * @param array $args The command arguments and options
      * @param array $input The user input
      *
-     * @return Symfony\Component\Console\Tester\CommandTester $tester
+     * @return Nonetallt\Jinitialize\Testing\CommandTester
      *
      */
     protected function runCommand(string $command, array $args = [], array $input = [])

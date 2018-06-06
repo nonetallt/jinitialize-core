@@ -8,6 +8,7 @@ use Tests\Classes\TestSumArgumentsCommand;
 use Tests\Classes\TestExportCommand;
 use Tests\Classes\TestImportCommand;
 use Nonetallt\Jinitialize\Procedure;
+use Tests\Classes\TestRevertCommand;
 
 class TestCaseTest extends TestCase
 {
@@ -127,5 +128,14 @@ class TestCaseTest extends TestCase
             'test:arguments 1 2 --number3=2'
         ]);
         $this->assertContainerEquals(['test' => ['sum' => 5]]);
+    }
+
+    public function testRevertCommand()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestRevertCommand::class]);
+
+        $tester = $this->runCommand('test:revert input');
+        $this->assertEquals('input', $tester->getCommand()->revert());
     }
 }
