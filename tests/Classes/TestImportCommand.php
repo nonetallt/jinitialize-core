@@ -14,8 +14,8 @@ class TestImportCommand extends JinitializeCommand
 
     protected function handle($input, $output, $style)
     {
-        $v1 = $this->import('testPlugin', 'variable1');
-        $v2 = $this->import('testPlugin', 'variable2');
+        $v1 = $this->import('variable1');
+        $v2 = $this->import('variable2');
         $this->export('variable3', $v1 . $v2);
     }
 

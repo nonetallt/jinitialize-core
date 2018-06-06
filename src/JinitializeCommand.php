@@ -56,10 +56,10 @@ abstract class JinitializeCommand extends Command
     }
 
     /**
-     * Get a value from the application container
+     * Get a value from the local plugin container
      *
      */
-    protected function import(string $plugin, string $key)
+    protected function import(string $key)
     {
         $container = JinitializeContainer::getInstance();
         return $container->getPlugin($this->getPluginName())->getContainer()->get($key);
