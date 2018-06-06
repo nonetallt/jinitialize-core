@@ -9,8 +9,6 @@
 
 ## jinitialize-core
 
-* git plugin
-
 * parse [ENV PLACEHOLDERS] from procedure.json to allow usage of settings and exported variables as arguments and options
 
 * remove settings: use above instead, update doc
@@ -30,7 +28,6 @@
 
 * DOC: reserved names: core, test, show list of others?
 
-* move isset from UnitTest to some helper lib
 * generate command stub command
 * autogenerate procedures command?
 * autogenerate doc command (autoschema)
