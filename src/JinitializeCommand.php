@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
 use Nonetallt\Jinitialize\Helpers\ShellUser;
+use Nonetallt\Jinitialize\Input\Input;
 
 abstract class JinitializeCommand extends Command
 {
@@ -33,19 +34,9 @@ abstract class JinitializeCommand extends Command
 
     private function replacePlaceholders($input)
     {
-        /* Replace exported placeholders */
-        $variables = array_merge($input->getArguments(), $input->getOptions());
-
-            foreach(JinitializeContainer::getInstance()->getData() as $plugin => $data) {
-                foreach($data as $key => $value) {
-                    foreach($variables as $name => $string) {
-                        $string = str_replace("[$plugin:$key]", $value, $string);
-
-                        if($input->hasOption($name)) $input->setOption($name, $string);
-                        else $input->setArgument($name, $string);
-                    }
-                }
-            }
+        $in = new Input($input);
+        $in->replaceEnvPlaceholders();
+        $in->replaceExportedPlaceholders();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -187,10 +178,4 @@ abstract class JinitializeCommand extends Command
     }
 
     protected abstract function handle($input, $output, $style);
-
-    /* public abstract function revert(); */
-
-    /* public abstract function recommendsRoot(); */
-
-    /* public abstract function exportsVariables(); */
 }

@@ -29,25 +29,12 @@ class CommandFactory
         try{
             $command = $this->app->getNew($name);
             $command->setName($name);
-            $command->setInput(new StringInput(self::replacePlaceholders($arguments)));
+            $command->setInput(new StringInput($arguments));
             return $command;
         }
         catch(ConsoleException $e) {
             throw new CommandNotFoundException("Command $name was not found");
         }
-    }
-
-    public static function replacePlaceholders(string $subject)
-    {
-        /* TODO format */
-
-        foreach($_ENV as $key => $value) {
-            $subject = str_replace("[$key]", $value, $subject);
-        }
-
-        
-
-        return $subject;
     }
 
     /**
