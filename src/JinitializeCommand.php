@@ -46,12 +46,18 @@ abstract class JinitializeCommand extends Command
         $this->replacePlaceholders($input);
         $this->isExecuted = true;
         $style = new SymfonyStyle($input, $output);
-        $this->handle($input, $output, $style);
+
+        try {
+            $this->handle($input, $output, $style);
+        } 
+        catch(\Exception $e) {
+            $this->abort($e->getMessage(), $e);
+        }
     }
 
-    protected function abort(string $message)
+    protected function abort(string $message, \Exception $original = null)
     {
-        $exception = new CommandAbortedException($message);
+        $exception = new CommandAbortedException($message, 0, $original);
         $exception->setCommand($this);
         throw $exception;
     }
