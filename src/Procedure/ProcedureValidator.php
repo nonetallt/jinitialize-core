@@ -4,6 +4,8 @@ namespace Nonetallt\Jinitialize\Procedure;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
 
 use Nonetallt\Jinitialize\Procedure;
 
@@ -16,11 +18,20 @@ class ProcedureValidator
         $this->procedure = $procedure;
     }
 
-    public function validate(InputInterface $input, SymfonyStyle $style)
+    public function validate(InputInterface $input, OutputInterface $output, SymfonyStyle $style)
     {
         /* Make's sure this procedure does not have commands that would require
          execution of another command that is not executed before.*/ 
         $this->validateRequiresExecution();
+
+        /* Print notification message if there are missing ENV placeholders */
+        $this->notifyMissingEnvPlaceholders($output, $style);
+
+        /* Check that the whole procedure can be executed by the user */
+        $this->checkPermissions($style);
+
+        /* Print list of commands that are recommended for running before others */
+        $this->recommend($output, $style);
     }
 
     private function validateRequiresExecution()
@@ -59,5 +70,88 @@ class ProcedureValidator
             $this->procedure->abort($message);
             throw $e;
         }
+    }
+
+    private function notifyMissingEnvPlaceholders($output, $style)
+    {
+        $print = false;
+        $rows = [];
+        foreach($this->procedure->getCommands() as $command) {
+            foreach($command->missingEnv() as $key => $value) {
+                $rows[] = [(string)$command, $value];
+                $print = true;
+            }
+        }
+
+        /* Empty table should not be printed */
+        if(! $print) return;
+
+        $style->note("Procedure $this->procedure has ENV placeholders that cannot be resolved at initialization.");
+
+        $table = new Table($output);
+        $table->setHeaders(['command', 'missing']);
+        $table->setRows($rows);
+        $table->render();
+
+        /* Write empty line after table */
+        $output->writeLn('');
+    }
+
+    /** 
+     * Warn user if procedure should be ran as root and is being ran by some other user 
+     *
+     */
+    private function checkPermissions($style)
+    {
+        $warnings = [];
+
+        foreach($this->procedure->getCommands() as $command) {
+
+            /* Skip evalutating commands that do not recommend root */
+            if(! $command->hasPublicMethod('recommendsRoot')) continue;
+
+            if($command->recommendsRoot() && ! ShellUser::getInstance()->isRoot()) {
+                $name = $command->getName();
+                $user = ShellUser::getInstance()->getName();
+                $warnings[] = "Command $name recommends running as root, currently $user.";
+            }
+        }
+
+        if(!empty($warnings)) {
+            $style->warning($warnings);
+            if($style->confirm("Would you like to abort current procedure ({$this->getName()})?")) {
+                $this->abort("Procedure aborted by user");
+            }
+        }
+    }
+
+    private function recommend($output, $style)
+    {
+        /* Similar to validate */
+        $rows = [];
+        $executed = [];
+        $method = 'recommendsExecuting';
+        
+        foreach($this->procedure->getCommands() as $command) {
+            $executed[] = get_class($command);
+            if(! $command->hasPublicMethod($method)) continue;
+
+            $notExecuted = array_diff($command->$method(), $executed);
+
+            foreach($notExecuted as $recommended) {
+                $rows[] = [$command->getPluginName(), $command->getName(), $recommended];
+            }
+        }
+
+        if(empty($rows)) return;
+
+        $style->note("Procedure $this->procedure has commands that recommend running the following commands before their execution:");
+        $table = new Table($output);
+        $table->setHeaders(['plugin', 'method', 'recommends']);
+        $table->setRows($rows);
+        $table->render();
+
+        /* Write empty line after table */
+        $output->writeLn('');
     }
 }
