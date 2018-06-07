@@ -146,6 +146,20 @@ class ProcedureFactoryTest extends TestCase
         ]);
     }
 
+    public function testProcedurePrintsNoteAboutMissingEnvPlaceholders()
+    {
+        $_ENV = [];
+        $_ENV['JINITIALIZE_PLACEHOLDER_FORMAT'] = '{{$}}';
+
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestSumArgumentsCommand::class]);
+        $procedure = $this->createProcedure('format-placeholder');
+        $app->add($procedure);
+        $tester = $this->runProcedure($procedure->getName());
+
+        $this->assertContains("[NOTE] Procedure $procedure has ENV placeholders that cannot be resolved", $tester->getDisplay());
+    }
+
     private function createFactory()
     {
         return new ProcedureFactory($this->getApplication(), [

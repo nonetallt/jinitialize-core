@@ -26,6 +26,11 @@ class InputTest extends TestCase
             '--opt1' => '[test:placeholder]',
         ];
 
+        $this->createInput($this->values);
+    }
+
+    private function createInput(array $values)
+    {
         $input = new ArrayInput($this->values);
         $input->bind(new InputDefinition([
            new InputArgument('arg1', InputArgument::REQUIRED),
@@ -33,7 +38,6 @@ class InputTest extends TestCase
            new InputArgument('arg3', InputArgument::REQUIRED),
            new InputOption('opt1', null, InputOption::VALUE_REQUIRED)
         ]));
-
         $this->input = new Input($input);
     }
 

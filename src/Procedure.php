@@ -10,14 +10,19 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\ArrayInput;
 
 use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
+use Nonetallt\Jinitialize\Procedure\ProcedureValidator;
+use Nonetallt\Jinitialize\Common\Traits\AbortsExecution;
 
 class Procedure extends Command
 {
+    use AbortsExecution;
+
     private $commands;
     private $commandsExecuted;
     private $name;
     private $description;
     private $io;
+    private $validator;
 
     public function __construct(string $name, string $description, array $commands)
     {
@@ -29,6 +34,7 @@ class Procedure extends Command
 
         $this->setCommands($commands);
         $this->commandsExecuted = [];
+        $this->validator = new ProcedureValidator($this);
     }
     
 
@@ -46,11 +52,15 @@ class Procedure extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /* Make's sure this procedure does not have commands that would require
-         execution of another command that is not executed before.*/ 
-        $this->validate();
-
         $this->io = new SymfonyStyle($input, $output);
+
+        $this->validator->validate($input, $this->io);
+
+
+
+        /* TODO */
+        $this->missingEnv($output);
+
         $app = $this->getApplication();
 
         /* Print list of commands that are recommended for running before others */
@@ -188,41 +198,6 @@ class Procedure extends Command
 
     private function validate()
     {
-        $errors = [];
-        $method = 'requiresExecuting';
-        $commandsThatWillExecuteBefore = [];
-
-        foreach($this->commands as $command) {
-
-            /* Save commands that are executed before next command */
-            /* Make sure that the command classes are compared instead of objects */
-            $commandsThatWillExecuteBefore[] = get_class($command);
-            
-            /* Skip methods that don't have the require method */
-            /* Executed methods should be saved before this in case they dont' have the method */
-            if(! $command->hasPublicMethod($method)) continue;
-
-            $notExecuted = array_diff($command->$method(), $commandsThatWillExecuteBefore);
-
-            /* If there are no problems, skip to next */
-            if(empty($notExecuted)) continue;
-
-            /* Construct error message */
-            $name = get_class($command);
-            $str = implode(', ', $notExecuted);
-            $errors[] = "$name: $str";
-        }
-
-        if(!empty($errors)) {
-            $pName = $this->getName();
-
-            $message = "Procedure $pName has commands that require other commands to be executed first:";
-            $message .= PHP_EOL;
-            $message .= implode(PHP_EOL, $errors);
-            $e = new CommandAbortedException($message);
-            $e->setCommand($this);
-            throw $e;
-        }
     }
 
     private function recommend(OutputInterface $output)
@@ -245,9 +220,34 @@ class Procedure extends Command
 
         if(empty($rows)) return;
 
-        $this->io->note("Procedure $this has methods that recommend running the following methods before their execution:");
+        $this->io->note("Procedure $this has commands that recommend running the following commands before their execution:");
         $table = new Table($output);
         $table->setHeaders(['plugin', 'method', 'recommends']);
+        $table->setRows($rows);
+        $table->render();
+
+        /* Write empty line after table */
+        $output->writeLn('');
+    }
+
+    public function missingEnv(OutputInterface $output)
+    {
+        $print = false;
+        $rows = [];
+        foreach($this->commands as $command) {
+            foreach($command->missingEnv() as $key => $value) {
+                $rows[] = [(string)$command, $value];
+                $print = true;
+            }
+        }
+
+        /* Empty table should not be printed */
+        if(! $print) return;
+
+        $this->io->note("Procedure $this has ENV placeholders that cannot be resolved at initialization.");
+
+        $table = new Table($output);
+        $table->setHeaders(['command', 'missing']);
         $table->setRows($rows);
         $table->render();
 

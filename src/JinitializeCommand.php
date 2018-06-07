@@ -10,12 +10,14 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Input\InputOption;
 
-use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
 use Nonetallt\Jinitialize\Helpers\ShellUser;
 use Nonetallt\Jinitialize\Input\Input;
+use Nonetallt\Jinitialize\Common\Traits\AbortsExecution;
 
 abstract class JinitializeCommand extends Command
 {
+    use AbortsExecution;
+
     private $user;
     private $plugin;
     private $input;
@@ -53,13 +55,6 @@ abstract class JinitializeCommand extends Command
         catch(\Exception $e) {
             $this->abort($e->getMessage(), $e);
         }
-    }
-
-    protected function abort(string $message, \Exception $original = null)
-    {
-        $exception = new CommandAbortedException($message, 0, $original);
-        $exception->setCommand($this);
-        throw $exception;
     }
 
     /**
@@ -176,6 +171,12 @@ abstract class JinitializeCommand extends Command
         if(! $reflection->isPublic()) return false;
 
         return true;
+    }
+
+    public function missingEnv()
+    {
+        $input = new Input($this->getInput(), $_ENV['JINITIALIZE_PLACEHOLDER_FORMAT'] ?? '[$]');
+        return $input->missingEnv();
     }
 
     public function isExecuted()

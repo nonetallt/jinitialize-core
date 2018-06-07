@@ -14,13 +14,15 @@ use Nonetallt\Jinitialize\Procedure;
 class JinitializeCommandTest extends TestCase
 {
     
+    /* TODO move to procedure test */
     public function testRecommendsExecutingFail()
     {
         $tester = $this->runCommandsAsProcedure([ TestRecommendsExecutionCommand::class ]);
         $output = $tester->getDisplay();
-        $this->assertContains('[NOTE] Procedure test:procedure has methods that recommend', $output);
+        $this->assertContains('[NOTE] Procedure test:procedure has commands that recommend', $output);
     }
 
+    /* TODO move to procedure test */
     public function testRecommendsExecutingSuccess()
     {
         $tester = $this->runCommandsAsProcedure([ 
@@ -29,7 +31,7 @@ class JinitializeCommandTest extends TestCase
         ]);
 
         $output = $tester->getDisplay();
-        $this->assertNotContains('[NOTE] Procedure test:procedure has methods that recommend', $output);
+        $this->assertNotContains('[NOTE] Procedure test:procedure has commands that recommend', $output);
     }
 
     public function testRequiresExecutingFail()
