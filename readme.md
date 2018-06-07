@@ -23,6 +23,9 @@
 
 * procedure: when plugin is not found, use composer search to suggest packages to install
 
+* register procedures, does not work currently with registerLocalPlugin, make
+  sure exported procedures are namespaced
+
 
 ## jinitialize-plugin
 

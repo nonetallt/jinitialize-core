@@ -24,7 +24,8 @@ class TestSumArgumentsCommand extends JinitializeCommand
         $number1 = $input->getArgument('number1');
         $number2 = $input->getArgument('number2');
         $number3 = $input->getOption('number3');
+        $sum = $number1 + $number2 + $number3;
 
-        $this->export('sum', $number1 + $number2 + $number3);
+        $this->export('sum', $sum);
     }
 }

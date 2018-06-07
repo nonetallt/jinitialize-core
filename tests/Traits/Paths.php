@@ -20,9 +20,13 @@ trait Paths
         return __DIR__ . '/../output';
     }
 
-    private function inputFolder()
+    private function inputFolder(string $file = null)
     {
-        return __DIR__ . '/../input';
+        $path = __DIR__ . '/../input';
+
+        if(! is_null($file)) return "$path/$file";
+
+        return $path;
     }
 
     private function outputFile()

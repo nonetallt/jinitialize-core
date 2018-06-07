@@ -8,6 +8,7 @@ use Nonetallt\Jinitialize\ProcedureFactory;
 use Nonetallt\Jinitialize\Procedure;
 use Nonetallt\Jinitialize\Exceptions\CommandNotFoundException;
 use Nonetallt\Jinitialize\Exceptions\PluginNotFoundException;
+use Tests\Classes\TestSumArgumentsCommand;
 
 class ProcedureFactoryTest extends TestCase
 {
@@ -60,10 +61,18 @@ class ProcedureFactoryTest extends TestCase
         $procedure = $this->createProcedure('test-missing-plugin');
     }
 
-    public function testGetNames()
+    public function testGetNamesMethodReturnsListContainingAllFactoryProcedureNames()
     {
         $factory = $this->createFactory();
-        $names = ['test-procedure', 'test-missing-command', 'test-missing-plugin', 'test-duplicate-commands'];
+        $names = [
+            'test-procedure',
+            'test-missing-command',
+            'test-missing-plugin',
+            'test-duplicate-commands',
+            'env-placeholder',
+            'exported-placeholder',
+            'env-exported-placeholder',
+        ];
         $this->assertEquals($names, $factory->getNames());
     }
 
@@ -73,10 +82,58 @@ class ProcedureFactoryTest extends TestCase
         $this->assertInstanceOf(Procedure::class, $procedure);
     }
 
+    public function testEnvPlaceholdersFromProcedureScriptsAreReplaced()
+    {
+        $_ENV['NUMBER1'] = 1;
+        $_ENV['NUMBER2'] = 2;
+        $_ENV['NUMBER3'] = 3;
+
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestSumArgumentsCommand::class]);
+        $procedure = $this->createProcedure('env-placeholder');
+        $app->add($procedure);
+        $this->runProcedure($procedure->getName());
+
+        $this->assertContainerContains([
+            'sum' => 6
+        ]);
+    }
+
+    public function testExportedPlaceholderFromProcedureScriptsAreReplaced()
+    {
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestSumArgumentsCommand::class]);
+        $procedure = $this->createProcedure('exported-placeholder');
+        $app->add($procedure);
+        $this->runProcedure($procedure->getName());
+
+        $this->assertContainerContains([
+            'sum' => 18
+        ]);
+    }
+
+    public function testExportedAndEnvPlaceholdersFromProcedureScriptsAreReplacedAtTheSameTime()
+    {
+        $_ENV['NUMBER1'] = 1;
+        $_ENV['NUMBER2'] = 2;
+
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestSumArgumentsCommand::class]);
+        $procedure = $this->createProcedure('env-exported-placeholder');
+        $app->add($procedure);
+        $this->runProcedure($procedure->getName());
+
+        $this->assertContainerContains([
+            'sum' => 9
+        ]);
+    }
+
     private function createFactory()
     {
-        $file = $this->stubsFolder() . '/procedure.json';
-        return new ProcedureFactory($this->getApplication(), [$file]);
+        return new ProcedureFactory($this->getApplication(), [
+            $this->stubsFolder() . '/procedure.json',
+            $this->inputFolder('placeholder-variable-procedures.json')
+        ]);
     }
 
     private function createProcedure(string $procedure)

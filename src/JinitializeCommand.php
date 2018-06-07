@@ -31,8 +31,26 @@ abstract class JinitializeCommand extends Command
         $this->isExecuted         = false;
     }
 
+    private function replacePlaceholders($input)
+    {
+        /* Replace exported placeholders */
+        $variables = array_merge($input->getArguments(), $input->getOptions());
+
+            foreach(JinitializeContainer::getInstance()->getData() as $plugin => $data) {
+                foreach($data as $key => $value) {
+                    foreach($variables as $name => $string) {
+                        $string = str_replace("[$plugin:$key]", $value, $string);
+
+                        if($input->hasOption($name)) $input->setOption($name, $string);
+                        else $input->setArgument($name, $string);
+                    }
+                }
+            }
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->replacePlaceholders($input);
         $this->isExecuted = true;
         $style = new SymfonyStyle($input, $output);
         $this->handle($input, $output, $style);

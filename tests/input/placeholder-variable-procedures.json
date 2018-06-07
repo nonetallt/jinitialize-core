@@ -1,0 +1,22 @@
+{
+    "env-placeholder": {
+        "description": "Tests that env placeholders are replaced",
+        "commands": [
+            "test:arguments [NUMBER1] [NUMBER2] --number3=[NUMBER3]"
+        ]
+    },
+    "exported-placeholder": {
+        "description": "Tests that exported placeholders are replaced",
+        "commands": [
+            "test:arguments 1 2 --number3=3",
+            "test:arguments [test:sum] [test:sum] --number3=[test:sum]"
+        ]   
+    },
+    "env-exported-placeholder": {
+        "description": "Tests that env and exported placeholders are replaced",
+        "commands": [
+            "test:arguments 1 2 --number3=3",
+            "test:arguments [NUMBER1] [NUMBER2] --number3=[test:sum]"
+        ]
+    }
+}

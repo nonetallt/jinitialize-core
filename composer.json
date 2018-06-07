@@ -1,6 +1,7 @@
 {
     "name": "nonetallt/jinitialize-core",
     "description": "Core components for jinitialize projects",
+    "keywords": ["jinitialize", "console", "application"],
     "type": "library",
     "require": {
         "php": ">=7.0.0",
