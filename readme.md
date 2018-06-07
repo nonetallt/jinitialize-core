@@ -9,9 +9,7 @@
 
 ## jinitialize-core
 
-* parse [ENV PLACEHOLDERS] from procedure.json to allow usage of settings and exported variables as arguments and options
-
-* remove settings: use above instead, update doc
+* remove settings: use placeholders instead, update doc
 
 * [?] JinitializeCommand: executesOther method, lists commands that are ran by the
   command

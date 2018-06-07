@@ -108,4 +108,19 @@ class InputTest extends TestCase
         ], 
         $this->input->getPlaceholders());
     }
+
+    public function testMissingEnvReturnsEnvWhenNoEnvValueIsDefined()
+    {
+        /* Make sure env does not have ENV key */
+        unset($_ENV['ENV']);
+
+        $this->assertEquals(['ENV'], $this->input->missingEnv());
+    }
+
+    public function testMissingEnvIsEmptyWhenEnvValueIsDefined()
+    {
+        $_ENV['ENV'] = 'value2';
+
+        $this->assertEmpty($this->input->missingEnv());
+    }
 }

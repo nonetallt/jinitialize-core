@@ -61,6 +61,11 @@ class Input
         return $this->findPlaceholders($regex);
     }
 
+    public function missingEnv()
+    {
+        return array_diff($this->getEnvPlaceholders(), array_keys($_ENV));
+    }
+
     private function findPlaceholders(string $regex)
     {
         $placeholders = [];
