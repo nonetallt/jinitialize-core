@@ -19,30 +19,25 @@ class Procedure extends Command
 
     private $commands;
     private $commandsExecuted;
-    private $name;
     private $description;
     private $validator;
 
     public function __construct(string $name, string $description, array $commands)
     {
-        $this->name = $name;
         $this->description = $description;
-
-        parent::__construct();
+        parent::__construct($name);
 
         $this->setCommands($commands);
         $this->commandsExecuted = [];
         $this->validator = new ProcedureValidator($this);
     }
-    
 
     /**
      * Implemented from Command
      */
     protected function configure()
     {
-        $this->setName($this->name);
-        $this->setDescription($this->description) ;
+        $this->setDescription($this->description);
     }
 
     /**
@@ -51,34 +46,34 @@ class Procedure extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $style = new SymfonyStyle($input, $output);
-
         $this->validator->validate($input, $output, $style);
 
-
-
+        /* Execute all commands */
         foreach($this->commands as $command) {
-
-            try {
-                $this->commandsExecuted[] = $command;
-                $output->writeLn((string)($command));
-                $command->run($command->getInput(), $output);
-            }
-            catch(CommandAbortedException $e) {
-
-                /* If not successful, revert the changes */
-                $style->warning("Command {$command->getName()} failed! Reverting changes.");
-                $style->error($e->getMessage());
-                $this->revert();
-
-                /* Stop executing further commands */
-                return false;
-            }
+            $success = $this->executeCommand($command, $output);
         }
 
         /* Print empty line before success */
         $output->writeLn('');
-        $style->success("Procedure $this->name completed");
+        $style->success("Procedure $this completed");
         return true;
+    }
+
+    private function executeCommand(Command $command, $output)
+    {
+        try {
+            $this->commandsExecuted[] = $command;
+            $output->writeLn((string)($command));
+            $command->run($command->getInput(), $output);
+        }
+        catch(CommandAbortedException $e) {
+
+            /* If not successful, revert the changes */
+            $style->warning("Command {$command->getName()} failed! Reverting changes.");
+            $style->error($e->getMessage());
+            $this->revert();
+            $this->abort("Command within procedure $this failed", $e);
+        }
     }
 
     /**
@@ -91,12 +86,12 @@ class Procedure extends Command
         for($n = count($this->commandsExecuted); $n > 0; $n--) {
             $command = $this->commandsExecuted[$n-1];
 
+            /* Revert if possible */
             if($command->hasPublicMethod('revert')) {
                 $command->revert();
+                continue;
             }
-            else {
-                $style->warning("Command {$command->getName()} cannot be reverted, revert method is not defined");
-            }
+            $style->warning("Command {$command->getName()} cannot be reverted, revert method is not defined");
         }
         $this->commandsExecuted = [];
     }
@@ -134,7 +129,6 @@ class Procedure extends Command
                 $msg = "A procedure should never be initialized with duplicate command objects ($name)";
                 throw new \Exception($msg);
             }
-
             $command->setBelongsToProcedure(true);
             $existingCommands[] = $command;
         }
@@ -144,5 +138,10 @@ class Procedure extends Command
     public function __toString()
     {
         return $this->getName();
+    }
+
+    public function getValidator()
+    {
+        return $this->validator;
     }
 }

@@ -68,7 +68,6 @@ class ProcedureValidator
             $message .= PHP_EOL;
             $message .= implode(PHP_EOL, $errors);
             $this->procedure->abort($message);
-            throw $e;
         }
     }
 
