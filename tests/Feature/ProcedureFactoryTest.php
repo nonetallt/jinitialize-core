@@ -139,7 +139,7 @@ class ProcedureFactoryTest extends TestCase
         $app->registerCommands('test', [TestSumArgumentsCommand::class]);
         $procedure = $this->createProcedure('format-placeholder');
         $app->add($procedure);
-        $this->runProcedure($procedure->getName());
+        $tester = $this->runProcedure($procedure->getName());
 
         $this->assertContainerContains([
             'sum' => 6

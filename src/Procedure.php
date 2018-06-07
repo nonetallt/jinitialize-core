@@ -64,6 +64,7 @@ class Procedure extends Command
 
             try {
                 $this->commandsExecuted[] = $command;
+                $output->writeLn((string)($command));
                 $command->run($command->getInput(), $output);
             }
             catch(CommandAbortedException $e) {
