@@ -72,6 +72,7 @@ class ProcedureFactoryTest extends TestCase
             'env-placeholder',
             'exported-placeholder',
             'env-exported-placeholder',
+            'format-placeholder',
         ];
         $this->assertEquals($names, $factory->getNames());
     }
@@ -125,6 +126,23 @@ class ProcedureFactoryTest extends TestCase
 
         $this->assertContainerContains([
             'sum' => 9
+        ]);
+    }
+
+    public function testPlaceholdersAreParsedCorrectlyWhenUsingDifferentFormat()
+    {
+        $_ENV['JINITIALIZE_PLACEHOLDER_FORMAT'] = '{{$}}';
+        $_ENV['NUMBER1'] = 1;
+        $_ENV['NUMBER2'] = 2;
+
+        $app = $this->getApplication();
+        $app->registerCommands('test', [TestSumArgumentsCommand::class]);
+        $procedure = $this->createProcedure('format-placeholder');
+        $app->add($procedure);
+        $this->runProcedure($procedure->getName());
+
+        $this->assertContainerContains([
+            'sum' => 6
         ]);
     }
 

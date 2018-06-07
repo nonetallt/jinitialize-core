@@ -18,5 +18,11 @@
             "test:arguments 1 2 --number3=3",
             "test:arguments [NUMBER1] [NUMBER2] --number3=[test:sum]"
         ]
+    },
+    "format-placeholder": {
+        "description": "Tests that different format can be used for placeholders",
+        "commands": [
+            "test:arguments {{NUMBER1}} {{NUMBER2}} --number3=3"
+        ]
     }
 }

@@ -13,7 +13,7 @@ class Input
     public function __construct(InputInterface $input, string $format = '[$]')
     {
         $this->input = $input;
-        $this->format = $format;
+        $this->setFormat($format);
     }
 
     public function setFormat(string $format)

@@ -21,6 +21,7 @@ abstract class JinitializeCommand extends Command
     private $input;
     private $belongsToProcedure;
     private $isExecuted;
+    private $argString;
 
     public function __construct(string $plugin)
     {
@@ -30,11 +31,12 @@ abstract class JinitializeCommand extends Command
         $this->input              = new ArrayInput([]);
         $this->belongsToProcedure = false;
         $this->isExecuted         = false;
+        $this->argString          = '';
     }
 
     private function replacePlaceholders($input)
     {
-        $in = new Input($input);
+        $in = new Input($input, $_ENV['JINITIALIZE_PLACEHOLDER_FORMAT'] ?? '[$]');
         $in->replaceEnvPlaceholders();
         $in->replaceExportedPlaceholders();
     }
@@ -125,6 +127,9 @@ abstract class JinitializeCommand extends Command
 
     public function setInput(StringInput $input)
     {
+        /* Saved for display purposes */
+        $this->argString = (string)$input;
+
         /* Bind args array keys to input definition of the command */
         $input->bind($this->getDefinition());
 
@@ -174,7 +179,7 @@ abstract class JinitializeCommand extends Command
 
     public function __toString()
     {
-        return $this->getName();
+        return $this->getName() .' '. $this->argString;
     }
 
     protected abstract function handle($input, $output, $style);
