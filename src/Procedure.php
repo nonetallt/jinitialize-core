@@ -70,9 +70,9 @@ class Procedure extends Command
         catch(CommandAbortedException $e) {
 
             /* If not successful, revert the changes */
-            $style->warning("Command {$command->getName()} failed! Reverting changes.");
-            $style->error($e->getMessage());
-            $this->revert();
+            $msg = $e->getMessage();
+            $style->warning("Command {$command->getName()} failed with message $msg Reverting changes.");
+            $this->revert($style);
             $this->abort("Command within procedure $this failed", $e);
         }
     }
