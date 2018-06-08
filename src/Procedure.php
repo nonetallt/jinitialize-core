@@ -63,6 +63,7 @@ class Procedure extends Command
     {
         try {
             $this->commandsExecuted[] = $command;
+            /* Write executed command signature */
             $output->writeLn((string)($command));
             $command->run($command->getInput(), $output);
         }

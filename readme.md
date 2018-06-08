@@ -9,37 +9,11 @@
 
 ## jinitialize-core
 
-* remove settings: use placeholders instead, update doc
-
 * [?] JinitializeCommand: executesOther method, lists commands that are ran by the
   command
 
-* [REQUIRES ENV EDITOR] print placeholder setting list when running procedure -> .env interactive editor
-
-* refactor most of required/recommend method to JinitializeCommand class, use in both
-  procedure and command (check on execute)
-
-* procedure: when plugin is not found, use composer search to suggest packages to install
-
-* register procedures, does not work currently with registerLocalPlugin, make
-  sure exported procedures are namespaced
-
-
-## jinitialize-plugin
-
-* DOC: reserved names: core, test, show list of others?
-
-* generate command stub command
-* autogenerate procedures command?
-* autogenerate doc command (autoschema)
-
-
-# Planned procedures
-
-* php-package
-* laravel-local
-* laravel-package
-* laravel-remote
+* DOC (jinitialize and plugin): reserved names: core, test, show list of others?
+    * link to nonetallt.com/jinitialize/plugins (search composer api, get plugin name from composer.json)
 
 
 # Planned modules
