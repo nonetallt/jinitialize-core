@@ -73,7 +73,7 @@ class Procedure extends Command
             $msg = $e->getMessage();
             $style->warning("Command {$command->getName()} failed. Error message: $msg");
             $style->note("Reverting changes..");
-            $this->revert($style);
+            $this->revert($output, $input, $style);
             $this->abort("Command within procedure $this failed", $e);
         }
     }
@@ -82,7 +82,7 @@ class Procedure extends Command
      * Reverts executed commands
      *
      */
-    private function revert($style)
+    private function revert($output, $input, $style)
     {
         /* Revert commands in backwards order */
         for($n = count($this->commandsExecuted); $n > 0; $n--) {
@@ -90,6 +90,7 @@ class Procedure extends Command
 
             /* Revert if possible */
             if($command->hasPublicMethod('revert')) {
+                $output->writeLn("Reverting $command");
                 $command->revert();
                 continue;
             }
