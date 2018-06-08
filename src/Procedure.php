@@ -71,7 +71,8 @@ class Procedure extends Command
 
             /* If not successful, revert the changes */
             $msg = $e->getMessage();
-            $style->warning("Command {$command->getName()} failed with message $msg Reverting changes.");
+            $style->warning("Command {$command->getName()} failed. Error message: $msg");
+            $style->note("Reverting changes..");
             $this->revert($style);
             $this->abort("Command within procedure $this failed", $e);
         }
