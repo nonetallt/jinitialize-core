@@ -119,7 +119,7 @@ class ProcedureValidator
 
         if(!empty($warnings)) {
             $style->warning($warnings);
-            if($style->confirm("Would you like to abort current procedure ({$this->getName()})?")) {
+            if($style->confirm("Would you like to abort current procedure ({$this->procedure->getName()})?")) {
                 $this->abort("Procedure aborted by user");
             }
         }

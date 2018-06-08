@@ -46,6 +46,6 @@ class ShellCommand extends Command
 
     public function recommendsRoot()
     {
-        return true;
+        return false;
     }
 }
