@@ -50,7 +50,7 @@ class Procedure extends Command
 
         /* Execute all commands */
         foreach($this->commands as $command) {
-            $success = $this->executeCommand($command, $output);
+            $success = $this->executeCommand($command, $input, $output, $style);
         }
 
         /* Print empty line before success */
@@ -59,7 +59,7 @@ class Procedure extends Command
         return true;
     }
 
-    private function executeCommand(Command $command, $output)
+    private function executeCommand(Command $command, $input, $output, $style)
     {
         try {
             $this->commandsExecuted[] = $command;
