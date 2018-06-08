@@ -123,6 +123,9 @@ class Input
     {
         foreach(JinitializeContainer::getInstance()->getData() as $plugin => $data) {
             foreach($data as $key => $value) {
+
+                /* Do not try to convert non string variables to strings */
+                if(! is_string($value)) continue;
                 $subject = str_replace("[$plugin:$key]", $value, $subject);
             }
         }
