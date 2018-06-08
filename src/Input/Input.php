@@ -124,8 +124,9 @@ class Input
         foreach(JinitializeContainer::getInstance()->getData() as $plugin => $data) {
             foreach($data as $key => $value) {
 
-                /* Do not try to convert non string variables to strings */
-                if(! is_string($value)) continue;
+                /* Make sure object can be converted to string */
+                if(! is_scalar($value) && ! method_exists($value, '__toString')) continue;
+
                 $subject = str_replace("[$plugin:$key]", $value, $subject);
             }
         }
