@@ -2,7 +2,6 @@
 
 ## jinitialize
 
-* readme picture
 * register commands from the local folder
 * register procedures from the local folder
 
