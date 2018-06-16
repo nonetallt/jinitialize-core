@@ -42,6 +42,7 @@
         "jinitialize-plugin": {
             "name": "core",
             "commands": [
+                "Nonetallt\\Jinitialize\\Commands\\AskCommand",
                 "Nonetallt\\Jinitialize\\Commands\\CreatePlugin",
                 "Nonetallt\\Jinitialize\\Commands\\ShellCommand"
             ]
