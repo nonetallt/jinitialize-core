@@ -1,0 +1,33 @@
+description "Create a new generic php package"
+help "Longer help description here.."
+
+# Create the initial project structure
+project
+    create with path=[PACKAGES_FOLDER]
+    mkdir src
+    mkdir tests
+    mkdir tests/Unit
+    mkdir tests/Feature
+    mkdir tests/input
+    mkdir tests/expected
+    mkdir tests/output
+    copy [STUBS_FOLDER]/phpunit.xml
+    copy [STUBS_FOLDER]/composer.stub.json composer.json with placeholders=env,exported
+
+# Create a remote repository in github
+github
+    authenticate [GIT_USER] [GIT_PASSWORD]
+    create-repository [project.name] with public=true
+    create-webhook [project.name] name=packagist
+
+# Initialize local repository and set remote to github repo
+git
+    init [project.path]
+    set-remote [github.ssh_url]
+    ignore tags/
+    ignore vendor/
+    ignore tests/output
+
+# Create ctags helper for the project
+core
+    shell 'ctags -f [project.path]/tags -R --fields=+laimS --languages=php --exclude=.git'
