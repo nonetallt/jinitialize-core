@@ -2,10 +2,9 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
 use Tests\Traits\CleansOutput;
-use Nonetallt\Jinitialize\Procedure\JinScript;
-use Nonetallt\Jinitialize\Procedure\JinScriptParser;
+use Nonetallt\Jinitialize\JinScript\JinScriptParser;
+use Nonetallt\Jinitialize\Testing\TestCase;
 
 class JinScriptParserTest extends TestCase
 {
@@ -15,15 +14,15 @@ class JinScriptParserTest extends TestCase
 
     public function setUp()
     {
+        parent::setUp();
+        $this->registerLocalPlugin($this->projectRoot().'/composer.json');
         $this->file = $this->inputFolder('php-package.jin');
-        $this->parser = new JinScriptParser($this->file);
+        $this->parser = new JinScriptParser($this->getApplication(), $this->file);
     }
 
     public function testNameReturnsBasenameOfTheFile()
     {
-        /* PLACEHOLDER */
-        $script = new JinScript($this->file);
-        $this->assertEquals('php-package', $script->name());
+        $this->assertEquals('php-package', $this->parser->getName());
     }
     
     public function testDescription()

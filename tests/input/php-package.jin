@@ -17,8 +17,8 @@ project
 # Create a remote repository in github
 github
     authenticate [GIT_USER] [GIT_PASSWORD]
-    create-repository [project.name] with public=true
-    create-webhook [project.name] name=packagist
+    create-repository [project.name] with private=false
+    create-webhook [project.name] with name=packagist
 
 # Initialize local repository and set remote to github repo
 git

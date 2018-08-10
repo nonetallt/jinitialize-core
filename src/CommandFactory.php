@@ -33,7 +33,7 @@ class CommandFactory
             return $command;
         }
         catch(ConsoleException $e) {
-            throw new CommandNotFoundException("Command $name was not found");
+            throw new CommandNotFoundException($e->getMessage());
         }
     }
 

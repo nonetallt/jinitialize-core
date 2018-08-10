@@ -1,6 +1,9 @@
 <?php
 
-namespace Nonetallt\Jinitialize\Procedure;
+namespace Nonetallt\Jinitialize\JinScript;
+
+use Nonetallt\Jinitialize\JinitializeApplication;
+use Nonetallt\Jinitialize\Exceptions\PluginNotFoundException;
 
 class JinScriptParser
 {
@@ -9,11 +12,28 @@ class JinScriptParser
     private $help;
     private $plugins;
     private $isParsed;
+    private $app;
+    private $errors;
 
-    public function __construct(string $filepath)
+    public function __construct(JinitializeApplication $app, string $filepath)
     {
+        if(! file_exists($filepath)) throw new \Exception("File $filepath not found");
+        if(! ends_with($filepath, '.jin')) throw new \Exception("Script should only be created from .jin files");
         $this->filepath = $filepath;
         $this->isParsed = false;
+        $this->app = $app;
+        $this->errors = new JinScriptErrors();
+        $this->plugins = [];
+    }
+
+    public function createProcedure()
+    {
+        return new Procedure(
+            $this->getName(),
+            $this->getDescription(),
+            $this->getCommands(),
+            $this->getHelp()
+        );
     }
 
     /**
@@ -55,8 +75,11 @@ class JinScriptParser
     private function parseCurrentPlugin(string $line)
     {
         /* First string delimited by space or tab */
-        $name = explode_multiple($line, ' ', '   ')[0];
-        $plugin = new JinScriptPluginParser($name);
+        $pluginName = explode_multiple($line, ' ', '   ')[0];
+        $plugin = new JinScriptPluginParser($this->app, $pluginName);
+
+        if(!$plugin->isInstalled()) $this->errors->fatal("Missing required plugin '$pluginName'.");
+        
         $this->plugins[] = $plugin;
 
         return $plugin;
@@ -117,5 +140,10 @@ class JinScriptParser
     {
         if(! $this->isParsed()) $this->parse();
         return $this->plugins;
+    }
+
+    public function getName()
+    {
+        return basename($this->filepath, '.jin');
     }
 }

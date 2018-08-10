@@ -20,11 +20,13 @@ class Procedure extends Command
     private $commands;
     private $commandsExecuted;
     private $description;
+    private $help;
     private $validator;
 
-    public function __construct(string $name, string $description, array $commands)
+    public function __construct(string $name, string $description, array $commands, string $help = '')
     {
         $this->description = $description;
+        $this->help = $help;
         parent::__construct($name);
 
         $this->setCommands($commands);
@@ -38,6 +40,7 @@ class Procedure extends Command
     protected function configure()
     {
         $this->setDescription($this->description);
+        $this->setHelp($this->help);
     }
 
     /**
