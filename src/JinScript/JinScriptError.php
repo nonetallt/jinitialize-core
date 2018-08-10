@@ -17,4 +17,10 @@ class JinScriptError
     {
         return $this->type === 'fatal';
     }
+
+    public function __toString()
+    {
+        $type = strtoupper($this->type);
+        return "[$type] $this->message";
+    }
 }

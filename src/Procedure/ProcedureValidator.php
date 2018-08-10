@@ -9,10 +9,12 @@ use Symfony\Component\Console\Helper\Table;
 
 use Nonetallt\Jinitialize\Procedure;
 use Nonetallt\Jinitialize\Helpers\ShellUser;
+use Nonetallt\Jinitialize\JinScript\JinScriptErrors;
 
 class ProcedureValidator
 {
     private $procedure;
+    private $errors;
 
     public function __construct(Procedure $procedure)
     {
@@ -21,6 +23,12 @@ class ProcedureValidator
 
     public function validate(InputInterface $input, OutputInterface $output, SymfonyStyle $style)
     {
+        /* JinScript errors from parsing .jin files */
+        $this->validateParsingErrors();
+
+        /* Validate command parameters */
+        $this->validateParameters();
+
         /* Make's sure this procedure does not have commands that would require
          execution of another command that is not executed before.*/ 
         $this->validateRequiresExecution();
@@ -33,6 +41,20 @@ class ProcedureValidator
 
         /* Print list of commands that are recommended for running before others */
         $this->recommend($output, $style);
+    }
+
+    private function validateParsingErrors()
+    {
+        if(is_null($this->errors)) return;
+
+        if($this->errors->isFatal()) {
+            $this->procedure->abort($this->errors);
+        }
+    }
+
+    private function validateParameters()
+    {
+        $this->procedure->getCommands();
     }
 
     private function validateRequiresExecution()
@@ -153,5 +175,10 @@ class ProcedureValidator
 
         /* Write empty line after table */
         $output->writeLn('');
+    }
+
+    public function setErrors(JinScriptErrors $errors)
+    {
+        $this->errors = $errors;
     }
 }

@@ -63,12 +63,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nonetallt/php-helpers.git",
-                "reference": "4cb3b2d605320b8cd88380c4d8389812d6ef0943"
+                "reference": "eb8ca0a79ca3520cf03b46c501f048ae8fc8263a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nonetallt/php-helpers/zipball/4cb3b2d605320b8cd88380c4d8389812d6ef0943",
-                "reference": "4cb3b2d605320b8cd88380c4d8389812d6ef0943",
+                "url": "https://api.github.com/repos/nonetallt/php-helpers/zipball/eb8ca0a79ca3520cf03b46c501f048ae8fc8263a",
+                "reference": "eb8ca0a79ca3520cf03b46c501f048ae8fc8263a",
                 "shasum": ""
             },
             "require": {
@@ -102,7 +102,7 @@
             "keywords": [
                 "helpers"
             ],
-            "time": "2018-08-09 13:02:45"
+            "time": "2018-08-10 14:02:17"
         },
         {
             "name": "psr/log",

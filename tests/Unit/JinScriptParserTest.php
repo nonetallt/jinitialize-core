@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Tests\Traits\CleansOutput;
 use Nonetallt\Jinitialize\JinScript\JinScriptParser;
 use Nonetallt\Jinitialize\Testing\TestCase;
+use Nonetallt\Jinitialize\Exceptions\CommandAbortedException;
 
 class JinScriptParserTest extends TestCase
 {
@@ -18,6 +19,15 @@ class JinScriptParserTest extends TestCase
         $this->registerLocalPlugin($this->projectRoot().'/composer.json');
         $this->file = $this->inputFolder('php-package.jin');
         $this->parser = new JinScriptParser($this->getApplication(), $this->file);
+    }
+
+    /* Register a procedure for testing purposes */
+    private function registerProcedure(string $name)
+    {
+        $file = $this->inputFolder($name);
+        $parser = new JinScriptParser($this->getApplication(), $file);
+        $procedure = $parser->createProcedure();
+        $this->getApplication()->add($procedure);
     }
 
     public function testNameReturnsBasenameOfTheFile()
@@ -38,5 +48,23 @@ class JinScriptParserTest extends TestCase
     public function testPlugins()
     {
         $this->assertCount(4, $this->parser->getPlugins());
+    }
+
+    public function testParsedProcedureShouldDisplayErrorsForMissingPlugins()
+    {
+        $this->registerProcedure('php-package.jin');
+        try {
+            $tester = $this->runProcedure('php-package');
+        } 
+        catch(CommandAbortedException $e) {
+            $this->assertContains("[FATAL] Missing required plugin 'project'.", $e->getMessage());
+            return;
+        }
+        $this->assertTrue(false);
+    }
+
+    public function testParsedProcedureShouldDisplayErrorsForNonexistentOptions()
+    {
+        $this->registerProcedure('invalid-options.jin');
     }
 }

@@ -20,4 +20,22 @@ class JinScriptErrors
     {
         return count($this->errors) === 0;
     }
+
+    public function isFatal()
+    {
+        foreach($this->errors as $error) {
+            if($error->isFatal()) return true;
+        }
+        return false;
+    }
+
+    public function __toString()
+    {
+        $message = '';
+
+        foreach($this->errors as $error) {
+            $message .= (string)$error . PHP_EOL;
+        }
+        return $message;
+    }
 }

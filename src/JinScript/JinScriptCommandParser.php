@@ -35,21 +35,22 @@ class JinScriptCommandParser
         foreach($split as $param) {
             if($param === 'with') $trackArgs = false;
             else if($param === $this->getName()) continue;
-            else if($trackArgs) $args[] = $param;
-            else $options[] = $param;
+            else if($trackArgs) $args[] = "'$param'";
+            else $options[] = "$param";
         }
 
         $this->arguments = $args;
-        $this->options = $this->prependSlashesToOptions($options);
+        $this->options = $this->formatOptions($options);
     }
 
-    /**
-     * Prepend -- before each option
-     */
-    private function prependSlashesToOptions(array $options)
+    
+    private function formatOptions(array $options)
     {
+        $converted = [];
+
         foreach($options as $option) {
-            $converted[] = "--$option";
+            $parser = new JinScriptOptionParser($option);
+            $converted[] = $parser->format();
         }
         return $converted;
     }

@@ -4,6 +4,7 @@ namespace Nonetallt\Jinitialize\JinScript;
 
 use Nonetallt\Jinitialize\JinitializeApplication;
 use Nonetallt\Jinitialize\Exceptions\PluginNotFoundException;
+use Nonetallt\Jinitialize\Procedure;
 
 class JinScriptParser
 {
@@ -28,12 +29,15 @@ class JinScriptParser
 
     public function createProcedure()
     {
-        return new Procedure(
+        $procedure = new Procedure(
             $this->getName(),
             $this->getDescription(),
             $this->getCommands(),
             $this->getHelp()
         );
+
+        $procedure->getValidator()->setErrors($this->errors);
+        return $procedure;
     }
 
     /**
@@ -47,6 +51,9 @@ class JinScriptParser
         $plugin = null;
 
         while(($line = fgets($handle)) !== false) {
+
+            /* Remove next line character from end of line */
+            $line = str_replace(PHP_EOL, '', $line);
 
             /* Skip comments and empty lines */
             if(starts_with($line, '#') || trim($line) === '') continue;
@@ -131,7 +138,7 @@ class JinScriptParser
 
         $commands = [];
         foreach($this->plugins as $plugin) {
-            $commands[] = $plugin->getCommands();
+            $commands = array_merge($commands, $plugin->getCommands());
         }
         return $commands;
     }
