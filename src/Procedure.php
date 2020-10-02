@@ -23,10 +23,12 @@ class Procedure extends Command
     private $help;
     private $validator;
 
-    public function __construct(string $name, string $description, array $commands, string $help = '')
+    public function __construct(string $name, string $description, array $commands, $help = '')
     {
         $this->description = $description;
         $this->help = $help;
+        if(! is_string($help)) $this->help = '';
+
         parent::__construct($name);
 
         $this->setCommands($commands);
@@ -135,7 +137,6 @@ class Procedure extends Command
                 $msg = "A procedure should never be initialized with duplicate command objects ($name)";
                 throw new \Exception($msg);
             }
-            $command->setBelongsToProcedure(true);
             $existingCommands[] = $command;
         }
         $this->commands = $commands;

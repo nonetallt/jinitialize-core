@@ -1,4 +1,4 @@
-description 'Used to test invalidd options'
+description 'Used to test invalid options'
 
 core
     shell 'echo test' with option1=1 option2=2

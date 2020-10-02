@@ -63,12 +63,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nonetallt/php-helpers.git",
-                "reference": "eb8ca0a79ca3520cf03b46c501f048ae8fc8263a"
+                "reference": "9651499f391c7fdbdcb91e6a96ea1704e3a77d89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nonetallt/php-helpers/zipball/eb8ca0a79ca3520cf03b46c501f048ae8fc8263a",
-                "reference": "eb8ca0a79ca3520cf03b46c501f048ae8fc8263a",
+                "url": "https://api.github.com/repos/nonetallt/php-helpers/zipball/9651499f391c7fdbdcb91e6a96ea1704e3a77d89",
+                "reference": "9651499f391c7fdbdcb91e6a96ea1704e3a77d89",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,8 @@
                     "Nonetallt\\Helpers\\": "src/Classes/"
                 },
                 "files": [
-                    "src/strings.php"
+                    "src/strings.php",
+                    "src/generic.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -102,7 +103,7 @@
             "keywords": [
                 "helpers"
             ],
-            "time": "2018-08-10 14:02:17"
+            "time": "2018-08-10 15:50:28"
         },
         {
             "name": "psr/log",

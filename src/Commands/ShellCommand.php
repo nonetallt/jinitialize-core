@@ -15,13 +15,13 @@ class ShellCommand extends Command
     {
         $this->setName('shell');
         $this->setDescription('Executes a command using command line.');
-        $this->addArgument('execute', InputArgument::REQUIRED, 'The shell command to run.');
+        $this->addArgument('shell_command', InputArgument::REQUIRED, 'The shell command to run.');
         $this->addArgument('export', InputArgument::OPTIONAL, 'Name to export command output as.');
     }
 
     protected function handle($input, $output, $style)
     {
-        $process = new Process($input->getArgument('execute'));
+        $process = new Process($input->getArgument('shell_command'));
 
         $process->run(function($type, $buffer) use($output){
             if($type !== Process::ERR) {
@@ -37,11 +37,6 @@ class ShellCommand extends Command
         if(! is_null($input->getArgument('export'))) {
             $this->export($input->getArgument('export'), $process->getOutput());
         }
-    }
-
-    public function revert()
-    {
-        // Not possible with shell commands
     }
 
     public function recommendsRoot()

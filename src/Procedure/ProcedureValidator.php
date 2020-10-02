@@ -21,6 +21,18 @@ class ProcedureValidator
         $this->procedure = $procedure;
     }
 
+    /**
+     * Checks for before running the procedure:
+     * 
+     * 1. JinScript syntax errors
+     * 2. Missing plugins
+     * 3. Missing commands
+     * 4. Missing parameters
+     * 5. Missing .env values
+     * 6. Imported values that do not exist after running the commands before
+     *    the requiring command
+     *
+     */
     public function validate(InputInterface $input, OutputInterface $output, SymfonyStyle $style)
     {
         /* JinScript errors from parsing .jin files */
@@ -54,7 +66,21 @@ class ProcedureValidator
 
     private function validateParameters()
     {
-        $this->procedure->getCommands();
+        $fatal = false;
+        $errors = '';
+
+        foreach($this->procedure->getCommands() as $command) {
+            /* if($command->getName() === 'core:shell') { */
+            /*     dd($command->getErrors()); */
+            /* } */
+            $errors = $command->getErrors();
+            if($errors->isFatal()) $fatal = true;
+            $errors .= (string)$errors;
+        }
+
+        if($fatal) {
+            $this->procedure->abort($errors);
+        }
     }
 
     private function validateRequiresExecution()

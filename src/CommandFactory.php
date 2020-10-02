@@ -26,15 +26,10 @@ class CommandFactory
 
         $name = self::commandSignatureFor($plugin, $name);
 
-        try{
-            $command = $this->app->getNew($name);
-            $command->setName($name);
-            $command->setInput(new StringInput($arguments));
-            return $command;
-        }
-        catch(ConsoleException $e) {
-            throw new CommandNotFoundException($e->getMessage());
-        }
+        $command = $this->app->getNew($name);
+        $command->setName($name);
+        $command->setInput(new StringInput($arguments));
+        return $command;
     }
 
     /**

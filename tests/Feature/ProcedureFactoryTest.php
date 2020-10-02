@@ -6,9 +6,9 @@ use Nonetallt\Jinitialize\Testing\TestCase;
 use Tests\Traits\Paths;
 use Nonetallt\Jinitialize\ProcedureFactory;
 use Nonetallt\Jinitialize\Procedure;
-use Nonetallt\Jinitialize\Exceptions\CommandNotFoundException;
 use Nonetallt\Jinitialize\Exceptions\PluginNotFoundException;
 use Tests\Classes\TestSumArgumentsCommand;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
 
 class ProcedureFactoryTest extends TestCase
 {

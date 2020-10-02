@@ -9,31 +9,34 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Exception\RuntimeException;
 
 use Nonetallt\Jinitialize\Helpers\ShellUser;
 use Nonetallt\Jinitialize\Input\Input;
 use Nonetallt\Jinitialize\Common\Traits\AbortsExecution;
+use Nonetallt\Jinitialize\JinScript\JinScriptErrors;
+use Nonetallt\Jinitialize\Input\InputValidator;
 
 abstract class JinitializeCommand extends Command
 {
     use AbortsExecution;
 
-    private $user;
-    private $plugin;
+    private $pluginName;
     private $input;
     private $belongsToProcedure;
     private $isExecuted;
     private $argString;
+    private $errors;
 
-    public function __construct(string $plugin)
+    public function __construct(string $pluginName)
     {
         parent::__construct();
-        $this->user               = ShellUser::getInstance();
-        $this->plugin             = $plugin;
+        $this->pluginName         = $pluginName;
         $this->input              = new ArrayInput([]);
         $this->belongsToProcedure = false;
         $this->isExecuted         = false;
         $this->argString          = '';
+        $this->errors             = new JinScriptErrors($this);
     }
 
     private function replacePlaceholders($input)
@@ -77,14 +80,9 @@ abstract class JinitializeCommand extends Command
         return $container->getPlugin($this->getPluginName())->getContainer()->get($key);
     }
 
-    protected function getUser()
-    {
-        return $this->user;
-    }
-
     public function getPluginName()
     {
-        return $this->plugin;
+        return $this->pluginName;
     }
 
     protected function getContainerData(string $plugin = null)
@@ -126,13 +124,33 @@ abstract class JinitializeCommand extends Command
         return $this->input;
     }
 
+    private function validationErrors($input)
+    {
+        $validator = new InputValidator($this->getDefinition());
+
+        foreach($validator->missingArguments($input) as $missing) {
+            $this->errors->fatal("Missing required argument '$missing'.");
+        }
+
+        foreach($validator->missingOptions($input) as $missing) {
+            $this->errors->fatal("Missing required option '$missing'.");
+        }
+        return $validator;
+    }
+
     public function setInput(StringInput $input)
     {
         /* Saved for display purposes */
         $this->argString = (string)$input;
+        $this->errors->setContext($this);
 
         /* Bind args array keys to input definition of the command */
-        $input->bind($this->getDefinition());
+        try {
+            $input->bind($this->getDefinition());
+        }
+        catch(RuntimeException $e) {
+            /* var_dump($e->getMessage()); */
+        }
 
         /* Convert string input to array */
         $args = $input->getArguments();
@@ -146,16 +164,8 @@ abstract class JinitializeCommand extends Command
         /* Bind the array input to this command definition */
         $this->input = new ArrayInput(array_merge($input->getArguments(), $options));
         $this->input->bind($this->getDefinition());
-    }
 
-    public function setBelongsToProcedure(bool $bool)
-    {
-        $this->belongsToProcedure = $bool;
-    }
-
-    public function belongsToProcedure()
-    {
-        return $this->belongsToProcedure;
+        return new InputValidator($this->getDefinition());
     }
 
     /**
@@ -182,6 +192,11 @@ abstract class JinitializeCommand extends Command
     public function isExecuted()
     {
         return $this->isExecuted;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     public function __toString()

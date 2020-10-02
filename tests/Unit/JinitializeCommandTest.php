@@ -13,7 +13,6 @@ use Nonetallt\Jinitialize\Procedure;
 
 class JinitializeCommandTest extends TestCase
 {
-    
     /* TODO move to procedure test */
     public function testRecommendsExecutingFail()
     {
@@ -65,19 +64,6 @@ class JinitializeCommandTest extends TestCase
 
         $command = $app->find('test:export');
         $this->assertTrue($command->isExecuted());
-    }
-
-    public function testBelongsToProcedureFalse()
-    {
-        $command = new TestExportCommand('test');
-        $this->assertFalse($command->belongsToProcedure());
-    }
-
-    public function testBelongsToProcedureTrue()
-    {
-        $command = new TestExportCommand('test');
-        $procedure = new Procedure('test', 'this is a test', [$command]);
-        $this->assertTrue($command->belongsToProcedure());
     }
 
     public function testWasOptionPassedShouldReturnFalseWhenOptionsAreNotSet()

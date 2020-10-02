@@ -52,19 +52,21 @@ class JinScriptParserTest extends TestCase
 
     public function testParsedProcedureShouldDisplayErrorsForMissingPlugins()
     {
+        $this->expectExceptionMessage("[FATAL] Missing required plugin 'project'.");
         $this->registerProcedure('php-package.jin');
-        try {
-            $tester = $this->runProcedure('php-package');
-        } 
-        catch(CommandAbortedException $e) {
-            $this->assertContains("[FATAL] Missing required plugin 'project'.", $e->getMessage());
-            return;
-        }
-        $this->assertTrue(false);
+        $tester = $this->runProcedure('php-package');
+    }
+
+    public function testParsedProcedureShouldDisplayErrorsForMissingArguments()
+    {
+        $this->expectExceptionMessage('[core:shell ]'.PHP_EOL."[FATAL] Missing required argument 'shell_command'");
+        $this->registerProcedure('invalid-arguments.jin');
+        $tester = $this->runProcedure('invalid-arguments');
     }
 
     public function testParsedProcedureShouldDisplayErrorsForNonexistentOptions()
     {
         $this->registerProcedure('invalid-options.jin');
+        $tester = $this->runProcedure('invalid-options');
     }
 }

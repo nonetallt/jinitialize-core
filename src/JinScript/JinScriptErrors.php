@@ -4,10 +4,12 @@ namespace Nonetallt\Jinitialize\JinScript;
 
 class JinScriptErrors
 {
+    private $context;
     private $errors;
     
-    public function __construct()
+    public function __construct(string $displayContext = '')
     {
+        $this->context = $displayContext;
         $this->errors = [];
     }
 
@@ -29,9 +31,15 @@ class JinScriptErrors
         return false;
     }
 
+    public function setContext(string $value)
+    {
+        $this->context = $value;
+    }
+
     public function __toString()
     {
         $message = '';
+        if($this->context !== '') $message .= PHP_EOL . "[$this->context]" . PHP_EOL;
 
         foreach($this->errors as $error) {
             $message .= (string)$error . PHP_EOL;
